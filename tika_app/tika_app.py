@@ -20,6 +20,7 @@ limitations under the License.
 from __future__ import unicode_literals
 import logging
 import os
+import tempfile
 from subprocess import Popen, PIPE, STDOUT
 
 log = logging.getLogger(__name__)
@@ -37,6 +38,14 @@ class InvalidFilePath(ValueError):
     pass
 
 
+class InvalidParameters(ValueError):
+    pass
+
+
+class TempIOError(Exception):
+    pass
+
+
 class TikaApp(object):
 
     def __init__(
@@ -50,6 +59,48 @@ class TikaApp(object):
 
         self._file_jar = file_jar
         self._memory_allocation = memory_allocation
+
+    def _write_payload(self, payload):
+        """Write a base64 payload on temp file
+
+        Keyyyword arguments:
+        payload -- payload in base64
+        """
+
+        try:
+            temp = tempfile.mkstemp()[1]
+            with open(temp, 'wb') as f:
+                f.write(payload.decode('base64'))
+            return temp
+        except:
+            log.exception("Failed opening '{}' file".format(temp))
+            raise TempIOError("Failed opening '{}' file".format(temp))
+
+    def _file_path(self, file_path=None, payload=None):
+        """Check if parameters are corrects and return file path
+
+        Keyword arguments:
+        file_path -- path of real file
+        payload -- payload in base64 of file
+        """
+
+        if payload and not file_path:
+            file_ = self._write_payload(payload)
+        elif file_path and not payload:
+            file_ = file_path
+        else:
+            log.exception(
+                "Invalid parameters: you must pass file_path or payload"
+            )
+            raise InvalidParameters(
+                "Invalid parameters: you must pass file_path or payload"
+            )
+
+        if not os.path.exists(file_):
+            log.exception("File {} does not exist".format(file_))
+            raise InvalidFilePath("File {} does not exist".format(file_))
+
+        return file_
 
     def _command_template(self, switches):
         """Template for Tika app commands
@@ -98,19 +149,90 @@ class TikaApp(object):
         return self._command_template(["--help"])
 
     def generic(self, switches=["--help"]):
+        """Generic method. Default display help"""
         return self._command_template(switches)
 
-    def detect_content_type_from_file(self, file_path):
-        if not os.path.exists(file_path):
-            log.exception("File {} does not exist".format(file_path))
-            raise InvalidFilePath("File {} does not exist".format(file_path))
+    def detect_content_type(self, file_path=None, payload=None):
+        """Return the content type of passed file or payload.
+
+        Keyword arguments:
+        file_path -- Path of file
+        payload -- Payload base64 of file
+        """
+
+        file_ = self._file_path(file_path, payload)
 
         switches = [
             "-d",
-            file_path,
+            file_,
         ]
 
-        return self._command_template(switches).lower()
+        result = self._command_template(switches).lower()
+
+        if payload:
+            os.remove(file_)
+
+        return result
+
+    def detect_language(self, file_path=None, payload=None):
+        """Return the language of passed file or payload.
+
+        Keyword arguments:
+        file_path -- Path of file
+        payload -- Payload base64 of file
+        """
+
+        file_ = self._file_path(file_path, payload)
+
+        switches = [
+            "-l",
+            file_,
+        ]
+
+        result = self._command_template(switches)
+
+        if payload:
+            os.remove(file_)
+
+        return result
+
+    def extract_all_content(
+        self,
+        file_path=None,
+        payload=None,
+        pretty_print=False
+    ):
+        """Return a JSON of all contents and metadate of passed file
+
+        Keyword arguments:
+        file_path -- Path of file
+        payload -- Payload base64 of file
+        pretty_print -- If True adds newlines and whitespace,
+                        for better readability
+        """
+
+        file_ = self._file_path(file_path, payload)
+
+        if pretty_print:
+            switches = [
+                "-J",
+                "-t",
+                "-r",
+                file_,
+            ]
+        else:
+            switches = [
+                "-J",
+                "-t",
+                file_,
+            ]
+
+        result = self._command_template(switches)
+
+        if payload:
+            os.remove(file_)
+
+        return result
 
 
 if __name__ == "__main__":
