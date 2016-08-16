@@ -33,17 +33,23 @@ class InvalidSwitches(ValueError):
     pass
 
 
+class InvalidFilePath(ValueError):
+    pass
+
+
 class TikaApp(object):
 
     def __init__(
         self,
-        file_jar=None
+        file_jar=None,
+        memory_allocation=None,
     ):
         if not file_jar or not os.path.exists(file_jar):
             log.exception("Invalid Tika app jar")
             raise InvalidTikaAppJar("Invalid Tika app jar")
 
         self._file_jar = file_jar
+        self._memory_allocation = memory_allocation
 
     def _command_template(self, switches):
         """Template for Tika app commands
@@ -56,21 +62,36 @@ class TikaApp(object):
             log.exception("Invalid switches. Must be a list")
             raise InvalidSwitches("Invalid switches. Must be a list")
 
-        out = Popen(
-            [
-                "java", "-jar",
+        if self.memory_allocation:
+            command = [
+                "java",
+                "-Xmx{}".format(self.memory_allocation),
+                "-jar",
                 self.file_jar,
-                ",".join(switches)
-            ],
+            ]
+        else:
+            command = [
+                "java",
+                "-jar",
+                self.file_jar,
+            ]
+        command.extend(switches)
+
+        out = Popen(
+            command,
             stdin=PIPE,
             stdout=PIPE,
             stderr=STDOUT
         )
-        return out.communicate()[0]
+        return out.communicate()[0].strip()
 
     @property
     def file_jar(self):
         return self._file_jar
+
+    @property
+    def memory_allocation(self):
+        return self._memory_allocation
 
     @property
     def help(self):
@@ -78,6 +99,18 @@ class TikaApp(object):
 
     def generic(self, switches=["--help"]):
         return self._command_template(switches)
+
+    def detect_content_type_from_file(self, file_path):
+        if not os.path.exists(file_path):
+            log.exception("File {} does not exist".format(file_path))
+            raise InvalidFilePath("File {} does not exist".format(file_path))
+
+        switches = [
+            "-d",
+            file_path,
+        ]
+
+        return self._command_template(switches).lower()
 
 
 if __name__ == "__main__":
