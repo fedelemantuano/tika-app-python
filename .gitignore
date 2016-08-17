@@ -2,4 +2,5 @@
 .*.swp
 .env
 .ropeproject/
+build/
 venv/
