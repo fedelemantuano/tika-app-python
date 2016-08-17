@@ -23,6 +23,11 @@ import os
 import tempfile
 from subprocess import Popen, PIPE, STDOUT
 
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 log = logging.getLogger(__name__)
 
 
@@ -200,15 +205,17 @@ class TikaApp(object):
         self,
         file_path=None,
         payload=None,
-        pretty_print=False
+        pretty_print=False,
+        convert_to_obj=False,
     ):
-        """Return a JSON of all contents and metadate of passed file
+        """Return a JSON of all contents and metadata of passed file
 
         Keyword arguments:
         file_path -- Path of file
         payload -- Payload base64 of file
         pretty_print -- If True adds newlines and whitespace,
                         for better readability
+        convert_to_obj -- If True convert JSON in object
         """
 
         file_ = self._file_path(file_path, payload)
@@ -228,6 +235,8 @@ class TikaApp(object):
             ]
 
         result = self._command_template(switches)
+        if result and convert_to_obj:
+            result = json.loads(result)
 
         if payload:
             os.remove(file_)

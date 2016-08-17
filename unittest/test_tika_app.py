@@ -93,6 +93,30 @@ class TestTikaApp(unittest.TestCase):
             "test.txt"
         )
 
+    def test_extract_content_obj(self):
+        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.12.jar")
+
+        result_obj = tika_app.extract_all_content(
+            file_path=test_zip,
+            convert_to_obj=True,
+        )
+
+        self.assertIsInstance(result_obj, list)
+        self.assertEqual(len(result_obj), 2)
+        self.assertEqual(result_obj[0]["Content-Type"], "application/zip")
+        self.assertEqual(
+            result_obj[1]["Content-Type"],
+            "text/plain; charset=ISO-8859-1"
+        )
+        self.assertEqual(
+            result_obj[0]["resourceName"],
+            "test.zip"
+        )
+        self.assertEqual(
+            result_obj[1]["resourceName"],
+            "test.txt"
+        )
+
     def test_extract_content_from_buffer(self):
         tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.12.jar")
 
