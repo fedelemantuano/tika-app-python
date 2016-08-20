@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='Tika App',
-    version='0.2',
+    version='0.3',
     description='Python client for Apache Tika App',
     author='Fedele Mantuano',
     author_email='mantuano.fedele@gmail.com',
