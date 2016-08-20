@@ -154,6 +154,14 @@ class TestTikaApp(unittest.TestCase):
 
         self.assertEqual(result, "en")
 
+    def test_extract_only_content(self):
+        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.12.jar")
+
+        result = tika_app.extract_only_content(file_path=test_txt)
+
+        self.assertIsInstance(result, str)
+        self.assertIn("test", result)
+
 
 if __name__ == '__main__':
     unittest.main()
