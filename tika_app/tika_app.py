@@ -179,6 +179,28 @@ class TikaApp(object):
 
         return result
 
+    def extract_only_content(self, file_path=None, payload=None):
+        """Return only the text content of passed file
+
+        Keyword arguments:
+        file_path -- Path of file
+        payload -- Payload base64 of file
+        """
+
+        file_ = self._file_path(file_path, payload)
+
+        switches = [
+            "-t",
+            file_,
+        ]
+
+        result = self._command_template(switches).strip()
+
+        if payload:
+            os.remove(file_)
+
+        return result
+
     def detect_language(self, file_path=None, payload=None):
         """Return the language of passed file or payload.
 

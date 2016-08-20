@@ -71,13 +71,27 @@ def tika_extract_all_content(memory=None):
     return output
 
 
+def tika_extract_only_content(memory=None):
+    tika_client = TikaApp(
+        file_jar="/opt/tika/tika-app-1.13.jar",
+        memory_allocation=memory,
+    )
+
+    output = tika_client.extract_only_content(
+        file_path=test_zip,
+    )
+
+    return output
+
+
 if __name__ == "__main__":
     """Results:
 
-    tika_content_type():        0.648940 sec
-    tika_detect_language()      1.742366 sec
-    magic_content_type():       0.000302 sec
-    tika_extract_all_content()  0.758190 sec
+    tika_content_type()             0.708108 sec
+    tika_detect_language()          1.748900 sec
+    magic_content_type()            0.000215 sec
+    tika_extract_all_content()      0.849755 sec
+    tika_extract_only_content()     0.791735 sec
     """
 
     repeats = 15
@@ -86,6 +100,7 @@ if __name__ == "__main__":
         "tika_detect_language",
         "magic_content_type",
         "tika_extract_all_content",
+        "tika_extract_only_content",
     ]
 
     for function in functions:
