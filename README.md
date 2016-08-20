@@ -53,10 +53,16 @@ For detect **language**:
 tika_client.detect_language("your_file")
 ```
 
-For detect **language**:
+For detect **all metadata and content**:
 
 ```
 tika_client.extract_all_content("your_file")
+```
+
+For detect **only content**:
+
+```
+tika_client.extract_only_content("your_file")
 ```
 
 If you want to use payload in base64, you can use the same methods with `payload` argument:
@@ -65,4 +71,17 @@ If you want to use payload in base64, you can use the same methods with `payload
 tika_client.detect_content_type(payload="base64_payload")
 tika_client.detect_language(payload="base64_payload")
 tika_client.extract_all_content(payload="base64_payload")
+tika_client.extract_only_content(payload="base64_payload")
+```
+
+## Performance tests
+
+These are the results of performance tests in [profiling](https://github.com/fedelemantuano/tika-app-python/tree/develop/profiling) folder:
+
+```
+tika_content_type()             0.708108 sec
+tika_detect_language()          1.748900 sec
+magic_content_type()            0.000215 sec
+tika_extract_all_content()      0.849755 sec
+tika_extract_only_content()     0.791735 sec
 ```
