@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(
-    name='Tika App',
+    name='tika-app',
     version='0.3',
     description='Python client for Apache Tika App',
     author='Fedele Mantuano',
