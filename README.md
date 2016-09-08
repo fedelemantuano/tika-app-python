@@ -41,7 +41,7 @@ pip install tika-app
 Import `TikaApp` class:
 
 ```
-from tika_app.tika_app import TikaApp
+from tikapp import TikaApp
 
 tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
 ```

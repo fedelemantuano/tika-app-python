@@ -18,14 +18,18 @@ limitations under the License.
 """
 
 from __future__ import unicode_literals
-from tika_app.tika_app import TikaApp
 import magic
 import os
+import sys
 import timeit
 
 profiling_path = os.path.realpath(os.path.dirname(__file__))
-test_zip = os.path.join(profiling_path, "lorem_ipsum.txt.zip")
-test_txt = os.path.join(profiling_path, "lorem_ipsum.txt")
+root = os.path.join(profiling_path, '..')
+sys.path.append(root)
+from tikapp import TikaApp
+
+test_zip = os.path.join(profiling_path, "files", "lorem_ipsum.txt.zip")
+test_txt = os.path.join(profiling_path, "files", "lorem_ipsum.txt")
 
 
 def tika_content_type():
