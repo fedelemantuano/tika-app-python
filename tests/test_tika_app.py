@@ -32,7 +32,7 @@ sys.path.append(root)
 test_txt = os.path.join(unittest_path, 'files', 'test.txt')
 test_zip = os.path.join(unittest_path, 'files', 'test.zip')
 
-import tika_app.tika_app as tika
+import tikapp as tika
 
 
 class TestTikaApp(unittest.TestCase):

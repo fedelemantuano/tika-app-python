@@ -3,4 +3,5 @@
 .env
 .ropeproject/
 build/
+dist/
 venv/

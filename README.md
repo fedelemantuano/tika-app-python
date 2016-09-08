@@ -2,8 +2,7 @@
 
 ## Overview
 
-Tika App Python is a wrapper for [Apache Tika App](https://tika.apache.org/).
-In the case in which there is an massive number of requests it is preferable to use Tika App in place of Tika Server. An example is the combined use with Apache Storm.
+tika-app-python is a wrapper for [Apache Tika App](https://tika.apache.org/).
 
 ### Apache 2 Open Source License
 tika-app-python can be downloaded, used, and modified free of charge. It is available under the Apache 2 license.
@@ -31,12 +30,18 @@ cd tika-app-python
 python setup.py install
 ```
 
+or use `pip`:
+
+```
+pip install tika-app
+```
+
 ## Usage
 
 Import `TikaApp` class:
 
 ```
-from tika_app.tika_app import TikaApp
+from tikapp import TikaApp
 
 tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
 ```

@@ -22,6 +22,12 @@ import logging
 import os
 import tempfile
 from subprocess import Popen, PIPE, STDOUT
+from exceptions import \
+    InvalidTikaAppJar, \
+    InvalidSwitches, \
+    InvalidFilePath, \
+    InvalidParameters, \
+    TempIOError
 
 try:
     import simplejson as json
@@ -29,26 +35,6 @@ except ImportError:
     import json
 
 log = logging.getLogger(__name__)
-
-
-class InvalidTikaAppJar(ValueError):
-    pass
-
-
-class InvalidSwitches(ValueError):
-    pass
-
-
-class InvalidFilePath(ValueError):
-    pass
-
-
-class InvalidParameters(ValueError):
-    pass
-
-
-class TempIOError(Exception):
-    pass
 
 
 class TikaApp(object):
