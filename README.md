@@ -81,7 +81,7 @@ tika_client.extract_only_content(payload="base64_payload")
 
 ## Performance tests
 
-These are the results of performance tests in [profiling](https://github.com/fedelemantuano/tika-app-python/tree/develop/profiling) folder:
+These are the results of performance tests in [tests](https://github.com/fedelemantuano/tika-app-python/tree/develop/tests) folder:
 
 ```
 tika_content_type()             0.708108 sec
