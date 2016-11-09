@@ -22,7 +22,7 @@ import logging
 import os
 import tempfile
 from subprocess import Popen, PIPE, STDOUT
-from exceptions import \
+from .exceptions import \
     InvalidTikaAppJar, \
     InvalidSwitches, \
     InvalidFilePath, \
@@ -35,6 +35,10 @@ except ImportError:
     import json
 
 log = logging.getLogger(__name__)
+
+VERSION = (0, 4, 0)
+__version__ = VERSION
+__versionstr__ = '.'.join(map(str, VERSION))
 
 
 class TikaApp(object):
