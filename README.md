@@ -36,7 +36,7 @@ or use `pip`:
 pip install tika-app
 ```
 
-## Usage
+## Usage in a project
 
 Import `TikaApp` class:
 
@@ -77,6 +77,44 @@ tika_client.detect_content_type(payload="base64_payload")
 tika_client.detect_language(payload="base64_payload")
 tika_client.extract_all_content(payload="base64_payload")
 tika_client.extract_only_content(payload="base64_payload")
+```
+
+## Usage from command-line
+
+If you installed tika-app-python with `pip` or `setup.py` you can use it with command-line.
+To use tika-app-python you should submit the Apache Tika app JAR. You can:
+ - leave the default value: `/opt/tika/tika-app-1.13.jar`
+ - set the enviroment value `TIKA_APP_JAR`
+ - use `--jar` switch
+
+The last one overwrite all the others.
+
+These are all swithes:
+
+```
+usage: tikapp [-h] (-f FILE | -p PAYLOAD) [-j JAR] [-d] [-t] [-l] [-a]
+                   [-v]
+
+Wrapper for Apache Tika App.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILE, --file FILE  File to submit (default: None)
+  -p PAYLOAD, --payload PAYLOAD
+                        Base64 payload to submit (default: None)
+  -j JAR, --jar JAR     Apache Tika app JAR (default: None)
+  -d, --detect          Detect document type (default: False)
+  -t, --text            Output plain text content (default: False)
+  -l, --language        Output only language (default: False)
+  -a, --all             Output metadata and content from all embedded files
+                        (default: False)
+  -v, --version         show program's version number and exit
+```
+
+Example:
+
+```shell
+$ tikapp -f example_file -a
 ```
 
 ## Performance tests

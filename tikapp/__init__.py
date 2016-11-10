@@ -46,14 +46,11 @@ class TikaApp(object):
     def __init__(
         self,
         file_jar=None,
-        memory_allocation=None,
+        memory_allocation=None
     ):
-        if not file_jar or not os.path.exists(file_jar):
-            log.exception("Invalid Tika app jar")
-            raise InvalidTikaAppJar("Invalid Tika app jar")
 
-        self._file_jar = file_jar
-        self._memory_allocation = memory_allocation
+        self.file_jar = file_jar
+        self.memory_allocation = memory_allocation
 
     def _write_payload(self, payload):
         """Write a base64 payload on temp file
@@ -85,11 +82,9 @@ class TikaApp(object):
             file_ = file_path
         else:
             log.exception(
-                "Invalid parameters: you must pass file_path or payload"
-            )
+                "Invalid parameters: you must pass file_path or payload")
             raise InvalidParameters(
-                "Invalid parameters: you must pass file_path or payload"
-            )
+                "Invalid parameters: you must pass file_path or payload")
 
         if not os.path.exists(file_):
             log.exception("File {} does not exist".format(file_))
@@ -135,9 +130,21 @@ class TikaApp(object):
     def file_jar(self):
         return self._file_jar
 
+    @file_jar.setter
+    def file_jar(self, value):
+        if not value or not os.path.exists(value):
+            log.exception("Invalid Tika app jar")
+            raise InvalidTikaAppJar("Invalid Tika app jar")
+
+        self._file_jar = value
+
     @property
     def memory_allocation(self):
         return self._memory_allocation
+
+    @memory_allocation.setter
+    def memory_allocation(self, value):
+        self._memory_allocation = value
 
     @property
     def help(self):
