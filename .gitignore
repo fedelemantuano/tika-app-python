@@ -2,6 +2,7 @@
 .*.swp
 .env
 .ropeproject/
+MANIFEST
 build/
 dist/
 venv/

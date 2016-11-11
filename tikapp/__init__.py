@@ -261,7 +261,3 @@ class TikaApp(object):
             os.remove(file_)
 
         return result
-
-
-if __name__ == "__main__":
-    tika_app = TikaApp(file_jar="/opt/tika/tika-app-1.12.jar")

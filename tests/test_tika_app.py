@@ -32,6 +32,8 @@ sys.path.append(root)
 test_txt = os.path.join(unittest_path, 'files', 'test.txt')
 test_zip = os.path.join(unittest_path, 'files', 'test.zip')
 
+TIKA_JAR = "/opt/tika/tika-app-1.14.jar"
+
 import tikapp as tika
 
 
@@ -43,16 +45,16 @@ class TestTikaApp(unittest.TestCase):
             tika.TikaApp)
 
     def test_invalid_switches(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
         with self.assertRaises(tika.InvalidSwitches):
             tika_app.generic("--help")
 
     def test_generic(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
         self.assertIsInstance(tika_app.generic(), str)
 
     def test_invalid_parameters(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
 
         with self.assertRaises(tika.InvalidParameters):
             tika_app.extract_all_content(file_path=None, payload=None)
@@ -61,9 +63,9 @@ class TestTikaApp(unittest.TestCase):
             tika_app.extract_all_content(file_path=True, payload=True)
 
     def test_extract_content_from_file(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
 
-        self.assertEqual("/opt/tika/tika-app-1.13.jar", tika_app.file_jar)
+        self.assertEqual(TIKA_JAR, tika_app.file_jar)
 
         result = tika_app.extract_all_content(test_zip)
         self.assertIsInstance(result, str)
@@ -79,7 +81,7 @@ class TestTikaApp(unittest.TestCase):
         self.assertEqual(result_obj[1]["resourceName"], "test.txt")
 
     def test_extract_content_obj(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
 
         result_obj = tika_app.extract_all_content(
             file_path=test_zip, convert_to_obj=True)
@@ -93,7 +95,7 @@ class TestTikaApp(unittest.TestCase):
         self.assertEqual(result_obj[1]["resourceName"], "test.txt")
 
     def test_extract_content_from_buffer(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
 
         with open(test_zip, 'rb') as f:
             payload = f.read().encode("base64")
@@ -117,12 +119,12 @@ class TestTikaApp(unittest.TestCase):
                          result_payload_obj[1]["resourceName"])
 
     def test_language(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
         result = tika_app.detect_language(file_path=test_txt)
         self.assertEqual(result, "en")
 
     def test_extract_only_content(self):
-        tika_app = tika.TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+        tika_app = tika.TikaApp(file_jar=TIKA_JAR)
         result = tika_app.extract_only_content(file_path=test_txt)
         self.assertIsInstance(result, str)
         self.assertIn("test", result)
