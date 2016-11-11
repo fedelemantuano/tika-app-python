@@ -18,7 +18,7 @@ limitations under the License.
 """
 
 from os.path import join, dirname
-from distutils.core import setup
+from setuptools import setup
 from tikapp import __versionstr__
 
 
