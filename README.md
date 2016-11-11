@@ -43,7 +43,7 @@ Import `TikaApp` class:
 ```
 from tikapp import TikaApp
 
-tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.13.jar")
+tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.14.jar")
 ```
 
 For get **content type**:

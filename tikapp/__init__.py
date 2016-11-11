@@ -36,7 +36,7 @@ except ImportError:
 
 log = logging.getLogger(__name__)
 
-VERSION = (0, 5, 0)
+VERSION = (0, 5, 1)
 __version__ = VERSION
 __versionstr__ = '.'.join(map(str, VERSION))
 
@@ -261,7 +261,3 @@ class TikaApp(object):
             os.remove(file_)
 
         return result
-
-
-if __name__ == "__main__":
-    tika_app = TikaApp(file_jar="/opt/tika/tika-app-1.12.jar")
