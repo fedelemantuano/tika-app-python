@@ -30,7 +30,8 @@ current = os.path.realpath(os.path.dirname(__file__))
 root = os.path.join(current, '..')
 sys.path.append(root)
 
-from tikapp import TikaApp, __versionstr__
+from tikapp import TikaApp
+from tikapp.__version__ import __versionstr__
 
 
 def get_args():

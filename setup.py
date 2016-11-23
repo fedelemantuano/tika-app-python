@@ -19,7 +19,7 @@ limitations under the License.
 
 from os.path import join, dirname
 from setuptools import setup
-from tikapp import __versionstr__
+from tikapp.__version__ import __versionstr__
 
 
 long_description = open(join(dirname(__file__), 'README')).read().strip()
