@@ -19,7 +19,7 @@ limitations under the License.
 
 from os.path import join, dirname
 from setuptools import setup
-from tikapp import __versionstr__
+from version import __version__
 
 
 long_description = open(join(dirname(__file__), 'README')).read().strip()
@@ -33,12 +33,12 @@ setup(
     license="Apache License, Version 2.0",
     url='https://github.com/fedelemantuano/tika-app-python',
     long_description=long_description,
-    version=__versionstr__,
+    version=__version__,
     author='Fedele Mantuano',
     author_email='mantuano.fedele@gmail.com',
     maintainer='Fedele Mantuano',
     maintainer_email='mantuano.fedele@gmail.com',
-    packages=['tikapp'],
+    packages=['tikapp', 'version'],
     platforms=["Linux", ],
     keywords=['tika', 'apache', 'toolkit'],
     classifiers=[

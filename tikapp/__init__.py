@@ -36,10 +36,6 @@ except ImportError:
 
 log = logging.getLogger(__name__)
 
-VERSION = (0, 5, 2)
-__version__ = VERSION
-__versionstr__ = '.'.join(map(str, VERSION))
-
 
 class TikaApp(object):
 
