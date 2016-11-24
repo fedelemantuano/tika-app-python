@@ -31,7 +31,7 @@ root = os.path.join(current, '..')
 sys.path.append(root)
 
 from tikapp import TikaApp
-from tikapp.__version__ import __versionstr__
+from tikapp_version import __version__
 
 
 def get_args():
@@ -89,7 +89,7 @@ def get_args():
         '-v',
         '--version',
         action='version',
-        version='%(prog)s {}'.format(__versionstr__))
+        version='%(prog)s {}'.format(__version__))
 
     return parser.parse_args()
 
