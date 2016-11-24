@@ -31,7 +31,7 @@ root = os.path.join(current, '..')
 sys.path.append(root)
 
 from tikapp import TikaApp
-from version import __version__
+from tikapp_version import __version__
 
 
 def get_args():
