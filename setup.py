@@ -19,7 +19,7 @@ limitations under the License.
 
 from os.path import join, dirname
 from setuptools import setup
-from version import __version__
+from tikapp_version import __version__
 
 
 long_description = open(join(dirname(__file__), 'README')).read().strip()
@@ -38,7 +38,7 @@ setup(
     author_email='mantuano.fedele@gmail.com',
     maintainer='Fedele Mantuano',
     maintainer_email='mantuano.fedele@gmail.com',
-    packages=['tikapp', 'version'],
+    packages=['tikapp', 'tikapp_version'],
     platforms=["Linux", ],
     keywords=['tika', 'apache', 'toolkit'],
     classifiers=[
