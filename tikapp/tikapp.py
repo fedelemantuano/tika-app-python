@@ -34,7 +34,7 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 
-__version__ = "1.0.0-dev"
+__version__ = "1.0.0"
 
 
 class TikaApp(object):
@@ -124,7 +124,7 @@ class TikaApp(object):
 
         f = file_path(path, payload)
         switches = ["-t", f]
-        result = self._command_template(switches).strip()
+        result = self._command_template(switches)
         return result, path, f
 
     @clean
@@ -142,8 +142,8 @@ class TikaApp(object):
         return result, path, f
 
     @clean
-    def extract_all_content(self, path=None, payload=None, pretty_print=False,
-                            convert_to_obj=False):
+    def extract_all_content(self, path=None, payload=None,
+                            pretty_print=False, convert_to_obj=False):
         """Return a JSON of all contents and metadata of passed file
 
         Args:
