@@ -19,19 +19,13 @@ limitations under the License.
 
 import argparse
 import os
-import sys
 
 try:
     from collections import ChainMap
 except ImportError:
     from chainmap import ChainMap
 
-current = os.path.realpath(os.path.dirname(__file__))
-root = os.path.join(current, '..')
-sys.path.append(root)
-
-from tikapp import TikaApp
-from tikapp_version import __version__
+from tikapp import TikaApp, __version__
 
 
 def get_args():
@@ -111,16 +105,16 @@ def main():
             f = args.file
 
             if args.detect:
-                print(tika.detect_content_type(file_path=f))
+                print(tika.detect_content_type(path=f))
 
             if args.text:
-                print(tika.extract_only_content(file_path=f))
+                print(tika.extract_only_content(path=f))
 
             if args.language:
-                print(tika.detect_language(file_path=f))
+                print(tika.detect_language(path=f))
 
             if args.all:
-                print(tika.extract_all_content(file_path=f, pretty_print=True))
+                print(tika.extract_all_content(path=f, pretty_print=True))
 
         elif args.payload:
             p = args.payload

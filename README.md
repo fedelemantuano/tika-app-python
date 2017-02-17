@@ -122,9 +122,17 @@ $ tikapp -f example_file -a
 These are the results of performance tests in [tests](https://github.com/fedelemantuano/tika-app-python/tree/develop/tests) folder:
 
 ```
-tika_content_type()             0.708108 sec
-tika_detect_language()          1.748900 sec
+(Python 2)
+tika_content_type()             0.704840 sec
+tika_detect_language()          1.592066 sec
 magic_content_type()            0.000215 sec
-tika_extract_all_content()      0.849755 sec
-tika_extract_only_content()     0.791735 sec
+tika_extract_all_content()      0.816366 sec
+tika_extract_only_content()     0.788667 sec
+
+(Python 3)
+tika_content_type()             0.698357 sec
+tika_detect_language()          1.593452 sec
+magic_content_type()            0.000226 sec
+tika_extract_all_content()      0.785915 sec
+tika_extract_only_content()     0.766517 sec
 ```
