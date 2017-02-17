@@ -83,7 +83,7 @@ tika_client.extract_only_content(payload="base64_payload")
 
 If you installed tika-app-python with `pip` or `setup.py` you can use it with command-line.
 To use tika-app-python you should submit the Apache Tika app JAR. You can:
- - leave the default value: `/opt/tika/tika-app-1.13.jar`
+ - leave the default value: `/opt/tika/tika-app-1.14.jar`
  - set the enviroment value `TIKA_APP_JAR`
  - use `--jar` switch
 
