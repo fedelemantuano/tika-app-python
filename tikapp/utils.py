@@ -18,22 +18,32 @@ limitations under the License.
 """
 
 from __future__ import unicode_literals
+import base64
 import logging
 import os
 import tempfile
-from .exceptions import InvalidParameters, InvalidFilePath
+from unicodedata import normalize
+from .exceptions import FilePathError
 
 
 log = logging.getLogger(__name__)
 
 
-def clean(func):
+def sanitize(func):
+    """ NFC is the normalization form recommended by W3C. """
 
-    def wrapper(*args):
-        out, path = func(*args)
+    def wrapper(*args, **kwargs):
+        return normalize('NFC', func(*args, **kwargs))
+    return wrapper
+
+
+def clean(func):
+    def wrapper(*args, **kwargs):
+        out, given_path, path = func(*args, **kwargs)
 
         try:
-            os.remove(path)
+            if not given_path:
+                os.remove(path)
         except OSError:
             pass
 
@@ -42,37 +52,27 @@ def clean(func):
     return wrapper
 
 
-def file_path(self, file_path=None, payload=None):
+def file_path(path=None, payload=None):
     """Given a file path or payload return a file path
 
     Args:
-        file_path (string): path of real file
+        path (string): path of real file
         payload(string): payload in base64 of file
 
     Return:
         Path of file
     """
-
-    if payload and not file_path:
-        f = write_payload(payload)
-
-    elif file_path and not payload:
-        f = file_path
-
-    else:
-        msg = "Invalid parameters: you must pass file_path or payload"
-        log.exception(msg)
-        raise InvalidParameters(msg)
+    f = path if path else write_payload(payload)
 
     if not os.path.exists(f):
         msg = "File {!r} does not exist".format(f)
         log.exception(msg)
-        raise InvalidFilePath(msg)
+        raise FilePathError(msg)
 
     return f
 
 
-def write_payload(self, payload):
+def write_payload(payload):
     """Write a base64 payload on temp file
 
     Args:
@@ -85,6 +85,7 @@ def write_payload(self, payload):
     temp = tempfile.mkstemp()[1]
 
     with open(temp, 'wb') as f:
-        f.write(payload.decode('base64'))
+        payload = base64.b64decode(payload)
+        f.write(payload)
 
     return temp

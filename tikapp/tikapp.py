@@ -21,8 +21,9 @@ from __future__ import unicode_literals
 import logging
 import os
 from subprocess import Popen, PIPE, STDOUT
-from .exceptions import InvalidTikaAppJar
-from .utils import file_path, clean
+
+from .exceptions import TikaAppJarError
+from .utils import file_path, clean, sanitize
 
 try:
     import simplejson as json
@@ -33,7 +34,7 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 
-__version__ = "0.5.5"
+__version__ = "1.0.0-dev"
 
 
 class TikaApp(object):
@@ -42,6 +43,11 @@ class TikaApp(object):
         self.file_jar = file_jar
         self.memory_allocation = memory_allocation
 
+    def __repr__(self):
+        class_name = type(self).__name__
+        return "{}({!r}, {!r})".format(
+            class_name, self.file_jar, self.memory_allocation)
+
     @property
     def file_jar(self):
         return self._file_jar
@@ -49,8 +55,9 @@ class TikaApp(object):
     @file_jar.setter
     def file_jar(self, value):
         if not value or not os.path.exists(value):
-            log.exception("Invalid Tika app jar")
-            raise InvalidTikaAppJar("Invalid Tika app jar")
+            msg = "Tika app jar not valid"
+            log.exception(msg)
+            raise TikaAppJarError(msg)
 
         self._file_jar = value
 
@@ -66,26 +73,27 @@ class TikaApp(object):
     def help(self):
         return self._command_template(["--help"])
 
+    @sanitize
     def _command_template(self, switches):
         """Template for Tika app commands
 
         Args:
             switches (list): list of switches to Tika app Jar
+
+        Return:
+            Standard output data (unicode Python 2, str Python 3)
         """
 
-        switches = list(switches)
+        command = ["java", "-jar", self.file_jar]
 
         if self.memory_allocation:
-            command = ["java", "-Xmx{}".format(self.memory_allocation),
-                       "-jar", self.file_jar]
-        else:
-            command = ["java", "-jar", self.file_jar]
+            command.append("-Xmx{}".format(self.memory_allocation))
 
         command.extend(switches)
 
         out = Popen(command, stdin=PIPE, stdout=PIPE, stderr=STDOUT)
-
-        return out.communicate()[0].strip()
+        stdoutdata, stderrdata = out.communicate()
+        return stdoutdata.decode("utf-8").strip()
 
     def generic(self, switches=["--help"]):
         """Generic method. Default display help"""
@@ -103,7 +111,7 @@ class TikaApp(object):
         f = file_path(path, payload)
         switches = ["-d", f]
         result = self._command_template(switches).lower()
-        return result, f
+        return result, path, f
 
     @clean
     def extract_only_content(self, path=None, payload=None):
@@ -114,10 +122,10 @@ class TikaApp(object):
             payload (string): Payload base64 to analyze
         """
 
-        f = self._file_path(path, payload)
+        f = file_path(path, payload)
         switches = ["-t", f]
         result = self._command_template(switches).strip()
-        return result, f
+        return result, path, f
 
     @clean
     def detect_language(self, path=None, payload=None):
@@ -128,10 +136,10 @@ class TikaApp(object):
             payload (string): Payload base64 to analyze
         """
 
-        f = path(path, payload)
+        f = file_path(path, payload)
         switches = ["-l", f]
         result = self._command_template(switches)
-        return result, f
+        return result, path, f
 
     @clean
     def extract_all_content(self, path=None, payload=None, pretty_print=False,
@@ -145,8 +153,7 @@ class TikaApp(object):
                                     for better readability
             convert_to_obj (boolean): If True convert JSON in object
         """
-
-        f = file_path(file_path, payload)
+        f = file_path(path, payload)
 
         if pretty_print:
             switches = ["-J", "-t", "-r", f]
@@ -156,6 +163,6 @@ class TikaApp(object):
         result = self._command_template(switches)
 
         if result and convert_to_obj:
-            result = json.loads(result)
+            result = json.loads(result, encoding="utf-8")
 
-        return result
+        return result, path, f

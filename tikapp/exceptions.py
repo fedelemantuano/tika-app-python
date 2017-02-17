@@ -17,16 +17,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-__all__ = ["InvalidTikaAppJar", "InvalidFilePath", "InvalidParameters"]
+__all__ = ["TikaAppJarError", "FilePathError"]
 
 
-class InvalidTikaAppJar(ValueError):
+class TikaAppJarError(ValueError):
     pass
 
 
-class InvalidFilePath(ValueError):
-    pass
-
-
-class InvalidParameters(ValueError):
+class FilePathError(ValueError):
     pass

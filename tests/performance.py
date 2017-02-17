@@ -31,28 +31,18 @@ from tikapp import TikaApp
 test_zip = os.path.join(profiling_path, "files", "lorem_ipsum.txt.zip")
 test_txt = os.path.join(profiling_path, "files", "lorem_ipsum.txt")
 
+TIKA_JAR = "/opt/tika/tika-app-1.14.jar"
+
 
 def tika_content_type():
-    tika_client = TikaApp(
-        file_jar="/opt/tika/tika-app-1.13.jar"
-    )
-
-    output = tika_client.detect_content_type(
-        file_path=test_zip,
-    )
-
+    tika_client = TikaApp(file_jar=TIKA_JAR)
+    output = tika_client.detect_content_type(path=test_zip)
     return output
 
 
 def tika_detect_language():
-    tika_client = TikaApp(
-        file_jar="/opt/tika/tika-app-1.13.jar"
-    )
-
-    output = tika_client.detect_language(
-        file_path=test_zip,
-    )
-
+    tika_client = TikaApp(file_jar=TIKA_JAR)
+    output = tika_client.detect_language(path=test_zip)
     return output
 
 
@@ -63,39 +53,32 @@ def magic_content_type():
 
 
 def tika_extract_all_content(memory=None):
-    tika_client = TikaApp(
-        file_jar="/opt/tika/tika-app-1.13.jar",
-        memory_allocation=memory,
-    )
-
-    output = tika_client.extract_all_content(
-        file_path=test_zip,
-    )
-
+    tika_client = TikaApp(file_jar=TIKA_JAR, memory_allocation=memory)
+    output = tika_client.extract_all_content(path=test_zip)
     return output
 
 
 def tika_extract_only_content(memory=None):
-    tika_client = TikaApp(
-        file_jar="/opt/tika/tika-app-1.13.jar",
-        memory_allocation=memory,
-    )
-
-    output = tika_client.extract_only_content(
-        file_path=test_zip,
-    )
-
+    tika_client = TikaApp(file_jar=TIKA_JAR, memory_allocation=memory)
+    output = tika_client.extract_only_content(path=test_zip)
     return output
 
 
 if __name__ == "__main__":
     """Results:
+        (Python 2)
+        tika_content_type()             0.704840 sec
+        tika_detect_language()          1.592066 sec
+        magic_content_type()            0.000215 sec
+        tika_extract_all_content()      0.816366 sec
+        tika_extract_only_content()     0.788667 sec
 
-    tika_content_type()             0.708108 sec
-    tika_detect_language()          1.748900 sec
-    magic_content_type()            0.000215 sec
-    tika_extract_all_content()      0.849755 sec
-    tika_extract_only_content()     0.791735 sec
+        (Python 3)
+        tika_content_type()             0.698357 sec
+        tika_detect_language()          1.593452 sec
+        magic_content_type()            0.000226 sec
+        tika_extract_all_content()      0.785915 sec
+        tika_extract_only_content()     0.766517 sec
     """
 
     repeats = 15
@@ -104,14 +87,12 @@ if __name__ == "__main__":
         "tika_detect_language",
         "magic_content_type",
         "tika_extract_all_content",
-        "tika_extract_only_content",
-    ]
+        "tika_extract_only_content"]
 
     for function in functions:
         t = timeit.Timer(
             "{0}()".format(function),
-            "from __main__ import {0}".format(function),
-        )
+            "from __main__ import {0}".format(function))
         sec = t.timeit(repeats) / repeats
 
         print("{function}()\t\t{sec:.6f} sec".format(**locals()))
