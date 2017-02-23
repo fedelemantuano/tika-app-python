@@ -19,13 +19,19 @@ limitations under the License.
 
 import argparse
 import os
+import runpy
 
 try:
     from collections import ChainMap
 except ImportError:
     from chainmap import ChainMap
 
-from tikapp import TikaApp, __version__
+from tikapp import TikaApp
+
+current = os.path.realpath(os.path.dirname(__file__))
+
+__version__ = runpy.run_path(
+    os.path.join(current, "version.py"))["__version__"]
 
 
 def get_args():
