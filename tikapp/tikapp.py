@@ -34,9 +34,6 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 
-__version__ = "1.0.0"
-
-
 class TikaApp(object):
 
     def __init__(self, file_jar=None, memory_allocation=None):
