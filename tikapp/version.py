@@ -17,5 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+__version__ = "1.0.1"
 
-from .tikapp import TikaApp
+if __name__ == "__main__":
+    print(__version__)
