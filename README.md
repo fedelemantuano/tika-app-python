@@ -1,3 +1,4 @@
+[![PyPI version](https://badge.fury.io/py/tika-app.svg)](https://badge.fury.io/py/tika-app)
 [![Build Status](https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=develop)](https://travis-ci.org/fedelemantuano/tika-app-python)
 [![Coverage Status](https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=develop)](https://coveralls.io/github/fedelemantuano/tika-app-python?branch=develop)
 
