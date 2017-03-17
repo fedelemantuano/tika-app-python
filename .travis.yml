@@ -16,10 +16,14 @@ before_script:
 # command to install dependencies
 install: 
     - pip install -r requirements.txt
+    - pip install coveralls
 
 # command to run tests
 script: 
-    - python tests/test_tika_app.py
-    - python tests/performance.py
+    - coverage run --source=tikapp/ --omit=tikapp/__main__.py tests/test_tika_app.py
+    - coverage run --source=tikapp/ --omit=tikapp/__main__.py tests/performance.py
     - python -m tikapp -v
     - python -m tikapp -h
+
+after_success:
+    coveralls

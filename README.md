@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=develop)](https://travis-ci.org/fedelemantuano/tika-app-python)
+
 # tika-app-python
 
 ## Overview
