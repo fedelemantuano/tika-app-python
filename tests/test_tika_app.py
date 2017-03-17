@@ -38,7 +38,10 @@ test_txt = os.path.join(unittest_path, 'files', 'test.txt')
 test_zip = os.path.join(unittest_path, 'files', 'test.zip')
 mail_test_1 = os.path.join(unittest_path, 'files', 'mail_test_1')
 
-TIKA_JAR = "/opt/tika/tika-app-1.14.jar"
+try:
+    TIKA_APP_PATH = os.environ["TIKA_APP_PATH"]
+except KeyError:
+    TIKA_APP_PATH = "/opt/tika/tika-app-1.14.jar"
 
 import tikapp as tika
 from tikapp.exceptions import TikaAppJarError, FilePathError
@@ -49,7 +52,7 @@ class TestTikaApp(unittest.TestCase):
     def setUp(self):
         # Init
         self.parser = MailParser()
-        self.tika = tika.TikaApp(file_jar=TIKA_JAR)
+        self.tika = tika.TikaApp(file_jar=TIKA_APP_PATH)
 
     def test_JSONDecodeError(self):
         self.parser.parse_from_file(mail_test_1)
@@ -80,7 +83,7 @@ class TestTikaApp(unittest.TestCase):
         self.assertIsInstance(self.tika.generic(), six.text_type)
 
     def test_extract_all_content_file(self):
-        self.assertEqual(TIKA_JAR, self.tika.file_jar)
+        self.assertEqual(TIKA_APP_PATH, self.tika.file_jar)
 
         result = self.tika.extract_all_content(test_zip)
         self.assertIsInstance(result, six.text_type)
