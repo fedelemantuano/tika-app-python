@@ -1,3 +1,5 @@
+|Build Status| |Coverage Status|
+
 tika-app-python
 ===============
 
@@ -44,8 +46,8 @@ or use ``pip``:
 
     pip install tika-app
 
-Usage
------
+Usage in a project
+------------------
 
 Import ``TikaApp`` class:
 
@@ -124,9 +126,8 @@ These are all swithes:
 
 Example:
 
-.. code:: shell
+\`\`\`shell $ tikapp -f example\_file -a
 
-    $ tikapp -f example_file -a
 
 Performance tests
 -----------------
@@ -149,5 +150,10 @@ These are the results of performance tests in `tests`_ folder:
     tika_extract_all_content()      0.785915 sec
     tika_extract_only_content()     0.766517 sec
 
-.. _Apache Tika App: https://tika.apache.org/
 .. _tests: https://github.com/fedelemantuano/tika-app-python/tree/develop/tests
+.. _Apache Tika App: https://tika.apache.org/
+
+.. |Build Status| image:: https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=develop
+   :target: https://travis-ci.org/fedelemantuano/tika-app-python
+.. |Coverage Status| image:: https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=develop
+   :target: https://coveralls.io/github/fedelemantuano/tika-app-python?branch=develop
