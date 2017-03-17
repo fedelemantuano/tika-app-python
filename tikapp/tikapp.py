@@ -20,8 +20,9 @@ limitations under the License.
 from __future__ import unicode_literals
 import logging
 import os
-from subprocess import Popen, PIPE, STDOUT
+import subprocess
 
+import six
 from .exceptions import TikaAppJarError
 from .utils import file_path, clean, sanitize
 
@@ -81,15 +82,25 @@ class TikaApp(object):
             Standard output data (unicode Python 2, str Python 3)
         """
 
-        command = ["java", "-jar", self.file_jar]
+        command = ["java", "-jar", self.file_jar, "-eUTF-8"]
 
         if self.memory_allocation:
             command.append("-Xmx{}".format(self.memory_allocation))
 
         command.extend(switches)
 
-        out = Popen(command, stdin=PIPE, stdout=PIPE, stderr=STDOUT)
-        stdoutdata, stderrdata = out.communicate()
+        if six.PY2:
+            with open(os.devnull, "w") as devnull:
+                out = subprocess.Popen(
+                    command, stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE, stderr=devnull)
+        elif six.PY3:
+            out = subprocess.Popen(
+                command, stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+        stdoutdata, _ = out.communicate()
+
         return stdoutdata.decode("utf-8").strip()
 
     def generic(self, switches=["--help"]):
