@@ -1,4 +1,4 @@
-|Build Status| |Coverage Status|
+|PyPI version| |Build Status| |Coverage Status|
 
 tika-app-python
 ===============
@@ -153,6 +153,8 @@ These are the results of performance tests in `tests`_ folder:
 .. _tests: https://github.com/fedelemantuano/tika-app-python/tree/develop/tests
 .. _Apache Tika App: https://tika.apache.org/
 
+.. |PyPI version| image:: https://badge.fury.io/py/tika-app.svg
+   :target: https://badge.fury.io/py/tika-app
 .. |Build Status| image:: https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=develop
    :target: https://travis-ci.org/fedelemantuano/tika-app-python
 .. |Coverage Status| image:: https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=develop
