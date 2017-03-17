@@ -1,0 +1,29 @@
+language: python
+
+python:
+    - "2.6"
+    - "2.7"
+    - "3.0"
+    - "3.1"
+    - "3.2"
+    - "3.3"
+    - "3.4"
+    - "3.5"
+    - "3.6"
+
+env:
+    - TIKA_APP_PATH=/tmp/tika-app-1.14.jar
+
+before_script:
+    - curl -o ${TIKA_APP_PATH} https://archive.apache.org/dist/tika/tika-app-1.14.jar
+
+# command to install dependencies
+install: 
+    - pip install -r requirements.txt
+
+# command to run tests
+script: 
+    - python tests/test_tika_app.py
+    - python tests/performance.py
+    - python -m tikapp -v
+    - python -m tikapp -h
