@@ -8,10 +8,11 @@ python:
     - "3.6"
 
 env:
-    - TIKA_APP_PATH=/tmp/tika-app-1.14.jar
+    - TIKA_VER="1.15"
+      TIKA_APP_JAR=/tmp/tika-app-${TIKA_VER}.jar
 
 before_script:
-    - curl -o ${TIKA_APP_PATH} https://archive.apache.org/dist/tika/tika-app-1.14.jar
+    - curl -o ${TIKA_APP_JAR} https://archive.apache.org/dist/tika/tika-app-${TIKA_VER}.jar
 
 # command to install dependencies
 install: 
@@ -24,6 +25,7 @@ script:
     - coverage run --source=tikapp/ --omit=tikapp/__main__.py tests/performance.py
     - python -m tikapp -v
     - python -m tikapp -h
+    - python -m tikapp -a -f tests/files/test.zip
 
 after_success:
     coveralls

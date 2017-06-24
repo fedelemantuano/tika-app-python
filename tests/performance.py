@@ -32,19 +32,19 @@ test_zip = os.path.join(profiling_path, "files", "lorem_ipsum.txt.zip")
 test_txt = os.path.join(profiling_path, "files", "lorem_ipsum.txt")
 
 try:
-    TIKA_APP_PATH = os.environ["TIKA_APP_PATH"]
+    TIKA_APP_JAR = os.environ["TIKA_APP_JAR"]
 except KeyError:
-    TIKA_APP_PATH = "/opt/tika/tika-app-1.14.jar"
+    TIKA_APP_JAR = "/opt/tika/tika-app-1.15.jar"
 
 
 def tika_content_type():
-    tika_client = TikaApp(file_jar=TIKA_APP_PATH)
+    tika_client = TikaApp(file_jar=TIKA_APP_JAR)
     output = tika_client.detect_content_type(path=test_zip)
     return output
 
 
 def tika_detect_language():
-    tika_client = TikaApp(file_jar=TIKA_APP_PATH)
+    tika_client = TikaApp(file_jar=TIKA_APP_JAR)
     output = tika_client.detect_language(path=test_zip)
     return output
 
@@ -56,13 +56,13 @@ def magic_content_type():
 
 
 def tika_extract_all_content(memory=None):
-    tika_client = TikaApp(file_jar=TIKA_APP_PATH, memory_allocation=memory)
+    tika_client = TikaApp(file_jar=TIKA_APP_JAR, memory_allocation=memory)
     output = tika_client.extract_all_content(path=test_zip)
     return output
 
 
 def tika_extract_only_content(memory=None):
-    tika_client = TikaApp(file_jar=TIKA_APP_PATH, memory_allocation=memory)
+    tika_client = TikaApp(file_jar=TIKA_APP_JAR, memory_allocation=memory)
     output = tika_client.extract_only_content(path=test_zip)
     return output
 

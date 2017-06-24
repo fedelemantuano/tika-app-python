@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/tika-app.svg)](https://badge.fury.io/py/tika-app)
-[![Build Status](https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=develop)](https://travis-ci.org/fedelemantuano/tika-app-python)
-[![Coverage Status](https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=develop)](https://coveralls.io/github/fedelemantuano/tika-app-python?branch=develop)
+[![Build Status](https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=master)](https://travis-ci.org/fedelemantuano/tika-app-python)
+[![Coverage Status](https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=master)](https://coveralls.io/github/fedelemantuano/tika-app-python?branch=master)
 
 # tika-app-python
 
@@ -47,7 +47,7 @@ Import `TikaApp` class:
 ```
 from tikapp import TikaApp
 
-tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.14.jar")
+tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.15.jar")
 ```
 
 For get **content type**:
@@ -87,7 +87,7 @@ tika_client.extract_only_content(payload="base64_payload")
 
 If you installed tika-app-python with `pip` or `setup.py` you can use it with command-line.
 To use tika-app-python you should submit the Apache Tika app JAR. You can:
- - leave the default value: `/opt/tika/tika-app-1.14.jar`
+ - leave the default value: `/opt/tika/tika-app-1.15.jar`
  - set the enviroment value `TIKA_APP_JAR`
  - use `--jar` switch
 
