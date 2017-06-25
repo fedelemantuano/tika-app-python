@@ -101,7 +101,7 @@ def main():
     if args.jar:
         command_line = {"TIKA_APP_JAR": args.jar}
 
-    defaults = {"TIKA_APP_JAR": "/opt/tika/tika-app-1.14.jar"}
+    defaults = {"TIKA_APP_JAR": "/opt/tika/tika-app-1.15.jar"}
     options = ChainMap(command_line, os.environ, defaults)
 
     tika = TikaApp(options['TIKA_APP_JAR'])

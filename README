@@ -55,7 +55,7 @@ Import ``TikaApp`` class:
 
     from tikapp import TikaApp
 
-    tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.14.jar")
+    tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.15.jar")
 
 For get **content type**:
 
@@ -97,7 +97,7 @@ Usage from command-line
 If you installed tika-app-python with ``pip`` or ``setup.py`` you can
 use it with command-line. To use tika-app-python you should submit the
 Apache Tika app JAR. You can: - leave the default value:
-``/opt/tika/tika-app-1.14.jar`` - set the enviroment value
+``/opt/tika/tika-app-1.15.jar`` - set the enviroment value
 ``TIKA_APP_JAR`` - use ``--jar`` switch
 
 The last one overwrite all the others.
@@ -155,7 +155,7 @@ These are the results of performance tests in `tests`_ folder:
 
 .. |PyPI version| image:: https://badge.fury.io/py/tika-app.svg
    :target: https://badge.fury.io/py/tika-app
-.. |Build Status| image:: https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=develop
+.. |Build Status| image:: https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=master
    :target: https://travis-ci.org/fedelemantuano/tika-app-python
-.. |Coverage Status| image:: https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=develop
-   :target: https://coveralls.io/github/fedelemantuano/tika-app-python?branch=develop
+.. |Coverage Status| image:: https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=master
+   :target: https://coveralls.io/github/fedelemantuano/tika-app-python?branch=master
