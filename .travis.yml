@@ -1,3 +1,4 @@
+---
 language: python
 
 python:
@@ -8,21 +9,31 @@ python:
     - "3.6"
 
 env:
-    - TIKA_VER="1.15"
+    - TIKA_VER="1.16"
       TIKA_APP_JAR=/tmp/tika-app-${TIKA_VER}.jar
 
 before_script:
-    - curl -o ${TIKA_APP_JAR} https://archive.apache.org/dist/tika/tika-app-${TIKA_VER}.jar
+    - >
+        curl -o ${TIKA_APP_JAR}
+        https://archive.apache.org/dist/tika/tika-app-${TIKA_VER}.jar
 
 # command to install dependencies
-install: 
+install:
     - pip install -r requirements.txt
     - pip install coveralls
 
 # command to run tests
-script: 
-    - coverage run --source=tikapp/ --omit=tikapp/__main__.py tests/test_tika_app.py
-    - coverage run --source=tikapp/ --omit=tikapp/__main__.py tests/performance.py
+script:
+    - >
+        coverage run
+        --source=tikapp/
+        --omit=tikapp/__main__.py,tikapp/version.py
+        tests/test_tika_app.py
+    - >
+        coverage run
+        --source=tikapp/
+        --omit=tikapp/__main__.py,tikapp/version.py
+        tests/performance.py
     - python -m tikapp -v
     - python -m tikapp -h
     - python -m tikapp -a -f tests/files/test.zip

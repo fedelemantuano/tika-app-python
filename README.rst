@@ -1,4 +1,4 @@
-|PyPI version| |Build Status| |Coverage Status|
+|PyPI version| |Build Status| |Coverage Status| |BCH compliance|
 
 tika-app-python
 ===============
@@ -6,7 +6,8 @@ tika-app-python
 Overview
 --------
 
-tika-app-python is a wrapper for `Apache Tika App`_.
+tika-app-python is a wrapper for `Apache Tika
+App <https://tika.apache.org/>`__.
 
 Apache 2 Open Source License
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,13 +127,16 @@ These are all swithes:
 
 Example:
 
-\`\`\`shell $ tikapp -f example\_file -a
+.. code:: shell
 
+    $ tikapp -f example_file -a
 
 Performance tests
 -----------------
 
-These are the results of performance tests in `tests`_ folder:
+These are the results of performance tests in
+`tests <https://github.com/fedelemantuano/tika-app-python/tree/develop/tests>`__
+folder:
 
 ::
 
@@ -150,12 +154,11 @@ These are the results of performance tests in `tests`_ folder:
     tika_extract_all_content()      0.785915 sec
     tika_extract_only_content()     0.766517 sec
 
-.. _tests: https://github.com/fedelemantuano/tika-app-python/tree/develop/tests
-.. _Apache Tika App: https://tika.apache.org/
-
 .. |PyPI version| image:: https://badge.fury.io/py/tika-app.svg
    :target: https://badge.fury.io/py/tika-app
 .. |Build Status| image:: https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=master
    :target: https://travis-ci.org/fedelemantuano/tika-app-python
 .. |Coverage Status| image:: https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=master
    :target: https://coveralls.io/github/fedelemantuano/tika-app-python?branch=master
+.. |BCH compliance| image:: https://bettercodehub.com/edge/badge/fedelemantuano/tika-app-python?branch=develop
+   :target: https://bettercodehub.com/

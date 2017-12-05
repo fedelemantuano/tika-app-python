@@ -23,10 +23,7 @@ import sys
 import six
 import unittest
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import simplejson as json
 
 from mailparser import MailParser
 
@@ -41,7 +38,7 @@ mail_test_1 = os.path.join(unittest_path, 'files', 'mail_test_1')
 try:
     TIKA_APP_JAR = os.environ["TIKA_APP_JAR"]
 except KeyError:
-    TIKA_APP_JAR = "/opt/tika/tika-app-1.15.jar"
+    TIKA_APP_JAR = "/opt/tika/tika-app-1.16.jar"
 
 import tikapp as tika
 from tikapp.exceptions import TikaAppJarError, FilePathError
@@ -53,6 +50,11 @@ class TestTikaApp(unittest.TestCase):
         # Init
         self.parser = MailParser()
         self.tika = tika.TikaApp(file_jar=TIKA_APP_JAR)
+
+    def test_repr_string(self):
+        self.assertEquals(
+            six.text_type(self.tika),
+            "TikaApp('/opt/tika/tika-app-1.16.jar', None)")
 
     def test_JSONDecodeError(self):
         self.parser.parse_from_file(mail_test_1)
