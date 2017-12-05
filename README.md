@@ -1,6 +1,7 @@
 [![PyPI version](https://badge.fury.io/py/tika-app.svg)](https://badge.fury.io/py/tika-app)
 [![Build Status](https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=master)](https://travis-ci.org/fedelemantuano/tika-app-python)
 [![Coverage Status](https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=master)](https://coveralls.io/github/fedelemantuano/tika-app-python?branch=master)
+[![BCH compliance](https://bettercodehub.com/edge/badge/fedelemantuano/tika-app-python?branch=develop)](https://bettercodehub.com/)
 
 # tika-app-python
 
