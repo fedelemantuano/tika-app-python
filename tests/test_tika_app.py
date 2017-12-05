@@ -25,7 +25,7 @@ import unittest
 
 import simplejson as json
 
-from mailparser import MailParser
+import mailparser
 
 
 unittest_path = os.path.realpath(os.path.dirname(__file__))
@@ -48,13 +48,11 @@ class TestTikaApp(unittest.TestCase):
 
     def setUp(self):
         # Init
-        self.parser = MailParser()
+        self.parser = mailparser.parse_from_file(mail_test_1)
         self.tika = tika.TikaApp(file_jar=TIKA_APP_JAR)
 
     def test_JSONDecodeError(self):
-        self.parser.parse_from_file(mail_test_1)
-
-        for i in self.parser.attachments_list:
+        for i in self.parser.attachments:
 
             r = self.tika.extract_all_content(
                 payload=i["payload"], convert_to_obj=False)
