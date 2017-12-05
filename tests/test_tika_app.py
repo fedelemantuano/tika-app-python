@@ -51,11 +51,6 @@ class TestTikaApp(unittest.TestCase):
         self.parser = MailParser()
         self.tika = tika.TikaApp(file_jar=TIKA_APP_JAR)
 
-    def test_repr_string(self):
-        self.assertEquals(
-            six.text_type(self.tika),
-            "TikaApp('/opt/tika/tika-app-1.16.jar', None)")
-
     def test_JSONDecodeError(self):
         self.parser.parse_from_file(mail_test_1)
 
