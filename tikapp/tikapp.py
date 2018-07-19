@@ -72,7 +72,7 @@ class TikaApp(object):
         return self._command_template(["--help"])
 
     @sanitize
-    def _command_template(self, switches):
+    def _command_template(self, switches, objectInput = None):
         """Template for Tika app commands
 
         Args:
@@ -84,19 +84,23 @@ class TikaApp(object):
 
         command = ["java", "-jar", self.file_jar, "-eUTF-8"]
 
+        if "-" not in switches :
+            objectInput = subprocess.PIPE
+
         if self.memory_allocation:
             command.append("-Xmx{}".format(self.memory_allocation))
-
+   
         command.extend(switches)
 
         if six.PY2:
             with open(os.devnull, "w") as devnull:
                 out = subprocess.Popen(
-                    command, stdin=subprocess.PIPE,
+                    command, stdin=objectInput,
                     stdout=subprocess.PIPE, stderr=devnull)
+
         elif six.PY3:
             out = subprocess.Popen(
-                command, stdin=subprocess.PIPE,
+                command, stdin=objectInput,
                 stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
         stdoutdata, _ = out.communicate()
@@ -174,3 +178,51 @@ class TikaApp(object):
             result = json.loads(result, encoding="utf-8")
 
         return result, path, f
+
+    def extract_text_from_stream(self, objectInput, payload=None,
+                            pretty_print=False, convert_to_obj=False):
+        """Return a file object of text of passed file
+
+        Args:
+            objectInput : object file to analyze
+            payload (string): Payload base64 to analyze
+            pretty_print (boolean): If True adds newlines and whitespace,
+                                    for better readability
+            convert_to_obj (boolean): If True convert JSON in object
+        """
+
+        if pretty_print:
+            switches = ["-j","-J", "-t", "-r","-"]
+        else:
+            switches = ["-J", "-t","-"]
+
+        result = self._command_template(switches,objectInput)
+
+        if result and convert_to_obj:
+            result = json.loads(result, encoding="utf-8")
+        objectInput.seek(0)
+        return result, objectInput
+
+    def extract_metadata_from_stream(self, objectInput , payload=None,
+                            pretty_print=False, convert_to_obj=False):
+        """Return a file object of all contents and metadata of passed file
+
+        Args:
+            objectInput : object file to analyze
+            payload (string): Payload base64 to analyze
+            pretty_print (boolean): If True adds newlines and whitespace,
+                                    for better readability
+            convert_to_obj (boolean): If True convert JSON in object
+        """
+
+        if pretty_print:
+            switches = ["-r","-m","-"]
+        else:
+            switches = ["-m", "-"]
+
+        result = self._command_template(switches, objectInput)
+
+        if result and convert_to_obj:
+            result = json.loads(result, encoding="utf-8")
+        objectInput.seek(0)
+        return result, objectInput

@@ -33,12 +33,13 @@ root = os.path.join(unittest_path, '..')
 sys.path.append(root)
 test_txt = os.path.join(unittest_path, 'files', 'test.txt')
 test_zip = os.path.join(unittest_path, 'files', 'test.zip')
+test_pdf = os.path.join(unittest_path, 'files', 'pdf1.pdf')
 mail_test_1 = os.path.join(unittest_path, 'files', 'mail_test_1')
 
 try:
     TIKA_APP_JAR = os.environ["TIKA_APP_JAR"]
 except KeyError:
-    TIKA_APP_JAR = "./tika-server/tika-app-1.18.jar"
+    TIKA_APP_JAR = "/opt/tika/tika-app-1.18.jar"
 
 import tikapp as tika
 from tikapp.exceptions import TikaAppJarError, FilePathError
@@ -136,6 +137,21 @@ class TestTikaApp(unittest.TestCase):
         self.assertIsInstance(result, six.text_type)
         self.assertIn("test", result)
 
+    def test_extract_text_from_stream(self) :
+        with open(test_pdf) as f :
+            result = self.tika.extract_text_from_stream(objectInput = f)
+        self.assertIn("test", result[0])
+
+    def test_extract_metadata_from_stream(self) :
+        with open(test_pdf) as f :
+            result = self.tika.extract_metadata_from_stream(objectInput = f)
+        self.assertIn("access_permission:assemble_document: true", result[0])
+
+    def test_extract_meta_and_text(self) :
+        with open(test_pdf) as f :
+            text = self.tika.extract_text_from_stream(objectInput = f)
+            meta = self.tika.extract_metadata_from_stream(objectInput = f)
+        assert ("access_permission:assemble_document: true" in meta[0] and "test" in text[0] )
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
