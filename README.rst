@@ -82,6 +82,18 @@ For detect **only content**:
 
     tika_client.extract_only_content("your_file")
 
+For detect **only metadata** from object file
+
+
+::
+
+    tika_client.extract_metadata_from_stream("your_stream")
+
+For detect **only content** from object file
+
+::
+     tika_client.extract_text_from_stream("your_stream")
+
 If you want to use payload in base64, you can use the same methods with
 ``payload`` argument:
 
