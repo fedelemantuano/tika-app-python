@@ -38,7 +38,7 @@ mail_test_1 = os.path.join(unittest_path, 'files', 'mail_test_1')
 try:
     TIKA_APP_JAR = os.environ["TIKA_APP_JAR"]
 except KeyError:
-    TIKA_APP_JAR = "/opt/tika/tika-app-1.16.jar"
+    TIKA_APP_JAR = "./tika-server/tika-app-1.18.jar"
 
 import tikapp as tika
 from tikapp.exceptions import TikaAppJarError, FilePathError
