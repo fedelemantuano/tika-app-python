@@ -9,7 +9,7 @@ python:
     - "3.6"
 
 env:
-    - TIKA_VER="1.16"
+    - TIKA_VER="1.18"
       TIKA_APP_JAR=/tmp/tika-app-${TIKA_VER}.jar
 
 before_script:
