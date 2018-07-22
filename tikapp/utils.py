@@ -23,7 +23,7 @@ import logging
 import os
 import tempfile
 from unicodedata import normalize
-from .exceptions import FilePathError
+from exceptions import TikaAppFilePathError
 
 
 log = logging.getLogger(__name__)
@@ -38,7 +38,13 @@ def sanitize(func):
 
 
 def clean(func):
+    """
+    This decorator removes the temp file from disk. This is the case where
+    you want to analyze from a payload.
+    """
     def wrapper(*args, **kwargs):
+        # tuple: output command, path given from command line,
+        # path of templ file when you give the payload
         out, given_path, path = func(*args, **kwargs)
 
         try:
@@ -52,40 +58,50 @@ def clean(func):
     return wrapper
 
 
-def file_path(path=None, payload=None):
-    """Given a file path or payload return a file path
+def file_path(path=None, payload=None, objectInput=None):
+    """
+    Given a file path, payload or file object, it writes file on disk and
+    returns the temp path.
 
     Args:
         path (string): path of real file
         payload(string): payload in base64 of file
+        objectInput (object): file object/standard input to analyze
 
-    Return:
+    Returns:
         Path of file
     """
-    f = path if path else write_payload(payload)
+    f = path if path else write_payload(payload, objectInput)
 
     if not os.path.exists(f):
         msg = "File {!r} does not exist".format(f)
         log.exception(msg)
-        raise FilePathError(msg)
+        raise TikaAppFilePathError(msg)
 
     return f
 
 
-def write_payload(payload):
-    """Write a base64 payload on temp file
+def write_payload(payload=None, objectInput=None):
+    """
+    This function writes a base64 payload or file object on disk.
 
     Args:
         payload (string): payload in base64
+        objectInput (object): file object/standard input to analyze
 
-    Return:
+    Returns:
         Path of file
     """
 
     temp = tempfile.mkstemp()[1]
+    log.debug("Write payload in temp file {!r}".format(temp))
 
     with open(temp, 'wb') as f:
-        payload = base64.b64decode(payload)
+        if payload:
+            payload = base64.b64decode(payload)
+        elif objectInput:
+            payload = objectInput.read()
+
         f.write(payload)
 
     return temp

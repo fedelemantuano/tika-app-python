@@ -1,4 +1,8 @@
-|PyPI version| |Build Status| |Coverage Status| |BCH compliance|
+`PyPI version <https://badge.fury.io/py/tika-app>`__ `Build
+Status <https://travis-ci.org/fedelemantuano/tika-app-python>`__
+`Coverage
+Status <https://coveralls.io/github/fedelemantuano/tika-app-python?branch=master>`__
+`BCH compliance <https://bettercodehub.com/>`__
 
 tika-app-python
 ===============
@@ -7,7 +11,10 @@ Overview
 --------
 
 tika-app-python is a wrapper for `Apache Tika
-App <https://tika.apache.org/>`__.
+App <https://tika.apache.org/>`__. With this library you can analyze: -
+file on disk - payload in base64 - file object (like standard input)
+
+To use file object function you should use Apache Tika version >= 1.17.
 
 Apache 2 Open Source License
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,21 +38,21 @@ Clone repository
 
 ::
 
-    git clone https://github.com/fedelemantuano/tika-app-python.git
+   git clone https://github.com/fedelemantuano/tika-app-python.git
 
 and install tika-app-python with ``setup.py``:
 
 ::
 
-    cd tika-app-python
+   cd tika-app-python
 
-    python setup.py install
+   python setup.py install
 
 or use ``pip``:
 
 ::
 
-    pip install tika-app
+   pip install tika-app
 
 Usage in a project
 ------------------
@@ -54,55 +61,53 @@ Import ``TikaApp`` class:
 
 ::
 
-    from tikapp import TikaApp
+   from tikapp import TikaApp
 
-    tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.15.jar")
+   tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.18.jar")
 
 For get **content type**:
 
 ::
 
-    tika_client.detect_content_type("your_file")
+   tika_client.detect_content_type("your_file")
 
 For detect **language**:
 
 ::
 
-    tika_client.detect_language("your_file")
+   tika_client.detect_language("your_file")
 
 For detect **all metadata and content**:
 
 ::
 
-    tika_client.extract_all_content("your_file")
+   tika_client.extract_all_content("your_file")
 
 For detect **only content**:
 
 ::
 
-    tika_client.extract_only_content("your_file")
+   tika_client.extract_only_content("your_file")
 
-For detect **only metadata** from object file
-
-
-::
-
-    tika_client.extract_metadata_from_stream("your_stream")
-
-For detect **only content** from object file
-
-::
-     tika_client.extract_text_from_stream("your_stream")
-
-If you want to use payload in base64, you can use the same methods with
+You can analyze payload in base64 with the same methods, but passing
 ``payload`` argument:
 
 ::
 
-    tika_client.detect_content_type(payload="base64_payload")
-    tika_client.detect_language(payload="base64_payload")
-    tika_client.extract_all_content(payload="base64_payload")
-    tika_client.extract_only_content(payload="base64_payload")
+   tika_client.detect_content_type(payload="base64_payload")
+   tika_client.detect_language(payload="base64_payload")
+   tika_client.extract_all_content(payload="base64_payload")
+   tika_client.extract_only_content(payload="base64_payload")
+
+or you can analyze file object (like standard input) with the same
+methods, but passing ``objectInput`` argument:
+
+::
+
+   tika_client.detect_content_type(objectInput="objectInput")
+   tika_client.detect_language(objectInput="objectInput")
+   tika_client.extract_all_content(objectInput="objectInput")
+   tika_client.extract_only_content(objectInput="objectInput")
 
 Usage from command-line
 -----------------------
@@ -119,29 +124,36 @@ These are all swithes:
 
 ::
 
-    usage: tikapp [-h] (-f FILE | -p PAYLOAD) [-j JAR] [-d] [-t] [-l] [-a]
-                       [-v]
+   usage: tikapp [-h] (-f FILE | -p PAYLOAD | -k) [-j JAR] [-d] [-t] [-l]
+                      [-a] [-v]
 
-    Wrapper for Apache Tika App.
+   Wrapper for Apache Tika App.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -f FILE, --file FILE  File to submit (default: None)
-      -p PAYLOAD, --payload PAYLOAD
-                            Base64 payload to submit (default: None)
-      -j JAR, --jar JAR     Apache Tika app JAR (default: None)
-      -d, --detect          Detect document type (default: False)
-      -t, --text            Output plain text content (default: False)
-      -l, --language        Output only language (default: False)
-      -a, --all             Output metadata and content from all embedded files
-                            (default: False)
-      -v, --version         show program's version number and exit
+   optional arguments:
+     -h, --help            show this help message and exit
+     -f FILE, --file FILE  File to submit (default: None)
+     -p PAYLOAD, --payload PAYLOAD
+                           Base64 payload to submit (default: None)
+     -k, --stdin           Enable parsing from stdin (default: False)
+     -j JAR, --jar JAR     Apache Tika app JAR (default: None)
+     -d, --detect          Detect document type (default: False)
+     -t, --text            Output plain text content (default: False)
+     -l, --language        Output only language (default: False)
+     -a, --all             Output metadata and content from all embedded files
+                           (default: False)
+     -v, --version         show program's version number and exit
 
-Example:
+Example from file on disk:
 
 .. code:: shell
 
-    $ tikapp -f example_file -a
+   $ tikapp -f example_file -a
+
+Example from standard input
+
+.. code:: shell
+
+   $ tikapp -a -k < example_file
 
 Performance tests
 -----------------
@@ -152,25 +164,16 @@ folder:
 
 ::
 
-    (Python 2)
-    tika_content_type()             0.704840 sec
-    tika_detect_language()          1.592066 sec
-    magic_content_type()            0.000215 sec
-    tika_extract_all_content()      0.816366 sec
-    tika_extract_only_content()     0.788667 sec
+   (Python 2)
+   tika_content_type()             0.704840 sec
+   tika_detect_language()          1.592066 sec
+   magic_content_type()            0.000215 sec
+   tika_extract_all_content()      0.816366 sec
+   tika_extract_only_content()     0.788667 sec
 
-    (Python 3)
-    tika_content_type()             0.698357 sec
-    tika_detect_language()          1.593452 sec
-    magic_content_type()            0.000226 sec
-    tika_extract_all_content()      0.785915 sec
-    tika_extract_only_content()     0.766517 sec
-
-.. |PyPI version| image:: https://badge.fury.io/py/tika-app.svg
-   :target: https://badge.fury.io/py/tika-app
-.. |Build Status| image:: https://travis-ci.org/fedelemantuano/tika-app-python.svg?branch=master
-   :target: https://travis-ci.org/fedelemantuano/tika-app-python
-.. |Coverage Status| image:: https://coveralls.io/repos/github/fedelemantuano/tika-app-python/badge.svg?branch=master
-   :target: https://coveralls.io/github/fedelemantuano/tika-app-python?branch=master
-.. |BCH compliance| image:: https://bettercodehub.com/edge/badge/fedelemantuano/tika-app-python?branch=develop
-   :target: https://bettercodehub.com/
+   (Python 3)
+   tika_content_type()             0.698357 sec
+   tika_detect_language()          1.593452 sec
+   magic_content_type()            0.000226 sec
+   tika_extract_all_content()      0.785915 sec
+   tika_extract_only_content()     0.766517 sec

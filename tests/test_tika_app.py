@@ -18,39 +18,31 @@ limitations under the License.
 """
 
 import base64
+import logging
 import os
-import sys
 import six
 import unittest
 
+import mailparser
 import simplejson as json
 
-import mailparser
+from context import TikaApp, TikaAppJarError, TikaAppFilePathError
 
 
 unittest_path = os.path.realpath(os.path.dirname(__file__))
-root = os.path.join(unittest_path, '..')
-sys.path.append(root)
 test_txt = os.path.join(unittest_path, 'files', 'test.txt')
 test_zip = os.path.join(unittest_path, 'files', 'test.zip')
 test_pdf = os.path.join(unittest_path, 'files', 'pdf1.pdf')
 mail_test_1 = os.path.join(unittest_path, 'files', 'mail_test_1')
-
-try:
-    TIKA_APP_JAR = os.environ["TIKA_APP_JAR"]
-except KeyError:
-    TIKA_APP_JAR = "/opt/tika/tika-app-1.18.jar"
-
-import tikapp as tika
-from tikapp.exceptions import TikaAppJarError, FilePathError
+TIKA_APP_JAR = os.environ.get(
+    "TIKA_APP_JAR", None) or "/opt/tika/tika-app-1.18.jar"
 
 
 class TestTikaApp(unittest.TestCase):
 
     def setUp(self):
-        # Init
         self.parser = mailparser.parse_from_file(mail_test_1)
-        self.tika = tika.TikaApp(file_jar=TIKA_APP_JAR)
+        self.tika = TikaApp(file_jar=TIKA_APP_JAR)
 
     def test_JSONDecodeError(self):
         for i in self.parser.attachments:
@@ -65,13 +57,13 @@ class TestTikaApp(unittest.TestCase):
 
     def test_tikaappjarerror(self):
         with self.assertRaises(TikaAppJarError):
-            tika.TikaApp()
+            TikaApp()
 
     def test_filepatherror(self):
         with self.assertRaises(TypeError):
             self.tika.extract_all_content(path=None, payload=None)
 
-        with self.assertRaises(FilePathError):
+        with self.assertRaises(TikaAppFilePathError):
             self.tika.extract_all_content(
                 path="/tmp/fake_rand_file", payload=None)
 
@@ -79,11 +71,11 @@ class TestTikaApp(unittest.TestCase):
         self.assertIsInstance(self.tika.generic(), six.text_type)
 
     def test_extract_all_content_file(self):
+        self.maxDiff = None
         self.assertEqual(TIKA_APP_JAR, self.tika.file_jar)
 
         result = self.tika.extract_all_content(test_zip)
         self.assertIsInstance(result, six.text_type)
-
         result_obj = json.loads(result, encoding="utf-8")
         self.assertIsInstance(result_obj, list)
         self.assertEqual(len(result_obj), 2)
@@ -93,6 +85,14 @@ class TestTikaApp(unittest.TestCase):
             "text/plain; charset=ISO-8859-1")
         self.assertEqual(result_obj[0]["resourceName"], "test.zip")
         self.assertEqual(result_obj[1]["resourceName"], "test.txt")
+
+        result = self.tika.extract_all_content(test_zip, convert_to_obj=True)
+        with open(test_zip) as f:
+            result_stdin = self.tika.extract_all_content(
+                objectInput=f, convert_to_obj=True)
+            self.assertEqual(
+                result[0]["X-TIKA:content"],
+                result_stdin[0]["X-TIKA:content"])
 
     def test_extract_all_content_file_obj(self):
         result_obj = self.tika.extract_all_content(
@@ -132,26 +132,50 @@ class TestTikaApp(unittest.TestCase):
         result = self.tika.detect_language(path=test_txt)
         self.assertEqual(result, "en")
 
+        with open(test_txt) as f:
+            result_stdin = self.tika.detect_language(objectInput=f)
+            self.assertEqual(result, result_stdin)
+
+    def test_detect_content_type(self):
+        result = self.tika.detect_content_type(path=test_zip)
+        self.assertEqual(result, "application/zip")
+
+        with open(test_zip, "rb") as f:
+            result_stdin = self.tika.detect_content_type(objectInput=f)
+            self.assertEqual(result, result_stdin)
+
+        result = self.tika.detect_content_type(path=test_txt)
+        self.assertEqual(result, "text/plain")
+
+        with open(test_txt, "rb") as f:
+            result_stdin = self.tika.detect_content_type(objectInput=f)
+            self.assertEqual(result, result_stdin)
+
     def test_extract_only_content(self):
         result = self.tika.extract_only_content(path=test_txt)
         self.assertIsInstance(result, six.text_type)
         self.assertIn("test", result)
 
-    def test_extract_text_from_stream(self) :
-        with open(test_pdf) as f :
-            result = self.tika.extract_text_from_stream(objectInput = f)
-        self.assertIn("test", result[0])
+        with open(test_txt) as f:
+            result_stdin = self.tika.extract_only_content(objectInput=f)
+            self.assertEqual(result, result_stdin)
 
-    def test_extract_metadata_from_stream(self) :
-        with open(test_pdf) as f :
-            result = self.tika.extract_metadata_from_stream(objectInput = f)
-        self.assertIn("access_permission:assemble_document: true", result[0])
+    def test_analyze_from_stream(self):
+        tika_str = six.text_type(self.tika)
+        self.assertEqual(
+            tika_str, "TikaApp('/opt/tika/tika-app-1.18.jar', None)")
 
-    def test_extract_meta_and_text(self) :
-        with open(test_pdf) as f :
-            text = self.tika.extract_text_from_stream(objectInput = f)
-            meta = self.tika.extract_metadata_from_stream(objectInput = f)
-        assert ("access_permission:assemble_document: true" in meta[0] and "test" in text[0] )
+        with open(test_pdf) as f:
+            result = self.tika.extract_all_content(
+                objectInput=f)
+        self.assertIn("test", result)
+
+        with open(test_pdf) as f:
+            result = self.tika.extract_all_content(
+                objectInput=f, convert_to_obj=True)
+        self.assertIn("access_permission:assemble_document", result[0])
+
 
 if __name__ == '__main__':
+    logging.getLogger().addHandler(logging.NullHandler())
     unittest.main(verbosity=2)

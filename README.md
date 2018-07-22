@@ -8,6 +8,12 @@
 ## Overview
 
 tika-app-python is a wrapper for [Apache Tika App](https://tika.apache.org/).
+With this library you can analyze:
+ - file on disk
+ - payload in base64
+ - file object (like standard input)
+
+To use file object function you should use Apache Tika version >= 1.17.
 
 ### Apache 2 Open Source License
 tika-app-python can be downloaded, used, and modified free of charge. It is available under the Apache 2 license.
@@ -48,7 +54,7 @@ Import `TikaApp` class:
 ```
 from tikapp import TikaApp
 
-tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.15.jar")
+tika_client = TikaApp(file_jar="/opt/tika/tika-app-1.18.jar")
 ```
 
 For get **content type**:
@@ -75,25 +81,22 @@ For detect **only content**:
 tika_client.extract_only_content("your_file")
 ```
 
-For detect **only metadata** from object file
-
-```
-tika_client.extract_metadata_from_stream("your_stream")
-```
-
-For detect **only content** from object file
-
-```
-tika_client.extract_text_from_stream("your_stream")
-```
-
-If you want to use payload in base64, you can use the same methods with `payload` argument:
+You can analyze payload in base64 with the same methods, but passing `payload` argument:
 
 ```
 tika_client.detect_content_type(payload="base64_payload")
 tika_client.detect_language(payload="base64_payload")
 tika_client.extract_all_content(payload="base64_payload")
 tika_client.extract_only_content(payload="base64_payload")
+```
+
+or you can analyze file object (like standard input) with the same methods, but passing `objectInput` argument:
+
+```
+tika_client.detect_content_type(objectInput="objectInput")
+tika_client.detect_language(objectInput="objectInput")
+tika_client.extract_all_content(objectInput="objectInput")
+tika_client.extract_only_content(objectInput="objectInput")
 ```
 
 ## Usage from command-line
@@ -109,8 +112,8 @@ The last one overwrite all the others.
 These are all swithes:
 
 ```
-usage: tikapp [-h] (-f FILE | -p PAYLOAD) [-j JAR] [-d] [-t] [-l] [-a]
-                   [-v]
+usage: tikapp [-h] (-f FILE | -p PAYLOAD | -k) [-j JAR] [-d] [-t] [-l]
+                   [-a] [-v]
 
 Wrapper for Apache Tika App.
 
@@ -119,6 +122,7 @@ optional arguments:
   -f FILE, --file FILE  File to submit (default: None)
   -p PAYLOAD, --payload PAYLOAD
                         Base64 payload to submit (default: None)
+  -k, --stdin           Enable parsing from stdin (default: False)
   -j JAR, --jar JAR     Apache Tika app JAR (default: None)
   -d, --detect          Detect document type (default: False)
   -t, --text            Output plain text content (default: False)
@@ -128,10 +132,16 @@ optional arguments:
   -v, --version         show program's version number and exit
 ```
 
-Example:
+Example from file on disk:
 
 ```shell
 $ tikapp -f example_file -a
+```
+
+Example from standard input
+
+```shell
+$ tikapp -a -k < example_file
 ```
 
 ## Performance tests
