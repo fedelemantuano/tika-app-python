@@ -23,7 +23,10 @@ import logging
 import os
 import tempfile
 from unicodedata import normalize
-from exceptions import TikaAppFilePathError
+
+import six
+
+from .exceptions import TikaAppFilePathError
 
 
 log = logging.getLogger(__name__)
@@ -100,7 +103,10 @@ def write_payload(payload=None, objectInput=None):
         if payload:
             payload = base64.b64decode(payload)
         elif objectInput:
-            payload = objectInput.read()
+            if six.PY3:
+                payload = objectInput.buffer.read()
+            elif six.PY2:
+                payload = objectInput.read()
 
         f.write(payload)
 

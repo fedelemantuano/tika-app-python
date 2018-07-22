@@ -24,8 +24,8 @@ import os
 import subprocess
 
 import six
-from exceptions import TikaAppJarError
-from utils import file_path, clean, sanitize
+from .exceptions import TikaAppJarError
+from .utils import file_path, clean, sanitize
 
 try:
     import simplejson as json

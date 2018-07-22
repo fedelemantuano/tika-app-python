@@ -140,14 +140,14 @@ class TestTikaApp(unittest.TestCase):
         result = self.tika.detect_content_type(path=test_zip)
         self.assertEqual(result, "application/zip")
 
-        with open(test_zip, "rb") as f:
+        with open(test_zip) as f:
             result_stdin = self.tika.detect_content_type(objectInput=f)
             self.assertEqual(result, result_stdin)
 
         result = self.tika.detect_content_type(path=test_txt)
         self.assertEqual(result, "text/plain")
 
-        with open(test_txt, "rb") as f:
+        with open(test_txt) as f:
             result_stdin = self.tika.detect_content_type(objectInput=f)
             self.assertEqual(result, result_stdin)
 
