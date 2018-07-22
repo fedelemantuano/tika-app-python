@@ -42,7 +42,7 @@ class TikaApp(object):
         self.file_jar = file_jar
         self.memory_allocation = memory_allocation
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         class_name = type(self).__name__
         return "{}({!r}, {!r})".format(
             class_name, self.file_jar, self.memory_allocation)
