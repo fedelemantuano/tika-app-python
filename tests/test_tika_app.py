@@ -163,7 +163,8 @@ class TestTikaApp(unittest.TestCase):
     def test_analyze_from_stream(self):
         tika_str = six.text_type(self.tika)
         self.assertEqual(
-            tika_str, "TikaApp('/opt/tika/tika-app-1.18.jar', None)")
+            tika_str, six.text_type(
+                "TikaApp('/opt/tika/tika-app-1.18.jar', None)"))
 
         with open(test_pdf) as f:
             result = self.tika.extract_all_content(
