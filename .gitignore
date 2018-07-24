@@ -6,4 +6,4 @@ MANIFEST
 build/
 dist/
 tika_app.egg-info/
-venv/
+venv*/

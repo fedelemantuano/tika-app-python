@@ -18,13 +18,10 @@ limitations under the License.
 """
 
 import argparse
+import logging
 import os
 import runpy
-
-try:
-    from collections import ChainMap
-except ImportError:
-    from chainmap import ChainMap
+import sys
 
 from tikapp import TikaApp
 
@@ -50,6 +47,12 @@ def get_args():
         "--payload",
         dest="payload",
         help="Base64 payload to submit")
+    parsing_group.add_argument(
+        "-k",
+        "--stdin",
+        dest="stdin",
+        action="store_true",
+        help="Enable parsing from stdin")
 
     parser.add_argument(
         "-j",
@@ -91,55 +94,42 @@ def get_args():
         action='version',
         version='%(prog)s {}'.format(__version__))
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if args.stdin and args.detect:
+        parser.error("Detection content type with file object is not stable.")
+
+    return args
 
 
 def main():
     args = get_args()
 
-    command_line = dict()
-    if args.jar:
-        command_line = {"TIKA_APP_JAR": args.jar}
+    tika = TikaApp(args.jar or os.environ.get("TIKA_APP_JAR", None))
 
-    defaults = {"TIKA_APP_JAR": "/opt/tika/tika-app-1.15.jar"}
-    options = ChainMap(command_line, os.environ, defaults)
-
-    tika = TikaApp(options['TIKA_APP_JAR'])
+    parameters = {
+        "path": args.file,
+        "payload": args.payload,
+        "objectInput": sys.stdin if args.stdin else None}
 
     try:
-        if args.file:
-            f = args.file
+        if args.detect:
+            print(tika.detect_content_type(**parameters))
 
-            if args.detect:
-                print(tika.detect_content_type(path=f))
+        if args.text:
+            print(tika.extract_only_content(**parameters))
 
-            if args.text:
-                print(tika.extract_only_content(path=f))
+        if args.language:
+            print(tika.detect_language(**parameters))
 
-            if args.language:
-                print(tika.detect_language(path=f))
-
-            if args.all:
-                print(tika.extract_all_content(path=f, pretty_print=True))
-
-        elif args.payload:
-            p = args.payload
-
-            if args.detect:
-                print(tika.detect_content_type(payload=p))
-
-            if args.text:
-                print(tika.extract_only_content(payload=p))
-
-            if args.language:
-                print(tika.detect_language(payload=p))
-
-            if args.all:
-                print(tika.extract_all_content(payload=p, pretty_print=True))
+        if args.all:
+            parameters["pretty_print"] = True
+            print(tika.extract_all_content(**parameters))
 
     except IOError:
         pass
 
 
 if __name__ == '__main__':
+    logging.getLogger().addHandler(logging.NullHandler())
     main()

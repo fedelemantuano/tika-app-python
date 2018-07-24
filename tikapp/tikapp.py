@@ -18,17 +18,18 @@ limitations under the License.
 """
 
 from __future__ import unicode_literals
+
 import logging
 import os
 import subprocess
 
 import six
-from .exceptions import TikaAppJarError
+from .exceptions import TikaAppJarError, TikaAppError
 from .utils import file_path, clean, sanitize
 
 try:
     import simplejson as json
-except ImportError:
+except ImportError:  # pragma: no cover
     import json
 
 
@@ -41,7 +42,7 @@ class TikaApp(object):
         self.file_jar = file_jar
         self.memory_allocation = memory_allocation
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         class_name = type(self).__name__
         return "{}({!r}, {!r})".format(
             class_name, self.file_jar, self.memory_allocation)
@@ -72,35 +73,42 @@ class TikaApp(object):
         return self._command_template(["--help"])
 
     @sanitize
-    def _command_template(self, switches):
+    def _command_template(self, switches, objectInput=None):
         """Template for Tika app commands
 
         Args:
             switches (list): list of switches to Tika app Jar
+            objectInput (object): file object/standard input to analyze
 
         Return:
             Standard output data (unicode Python 2, str Python 3)
         """
-
         command = ["java", "-jar", self.file_jar, "-eUTF-8"]
-
         if self.memory_allocation:
             command.append("-Xmx{}".format(self.memory_allocation))
-
         command.extend(switches)
+
+        if not objectInput:
+            objectInput = subprocess.PIPE
+
+        log.debug("Subprocess command: {}".format(", ".join(command)))
 
         if six.PY2:
             with open(os.devnull, "w") as devnull:
                 out = subprocess.Popen(
-                    command, stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE, stderr=devnull)
+                    command,
+                    stdin=objectInput,
+                    stdout=subprocess.PIPE,
+                    stderr=devnull)
+
         elif six.PY3:
             out = subprocess.Popen(
-                command, stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                command,
+                stdin=objectInput,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL)
 
         stdoutdata, _ = out.communicate()
-
         return stdoutdata.decode("utf-8").strip()
 
     def generic(self, switches=["--help"]):
@@ -108,66 +116,101 @@ class TikaApp(object):
         return self._command_template(switches)
 
     @clean
-    def detect_content_type(self, path=None, payload=None):
-        """Return the content type of passed file or payload.
+    def detect_content_type(self, path=None, payload=None, objectInput=None):
+        """
+        Return the content type of passed file or payload.
 
         Args:
             path (string): Path of file to analyze
             payload (string): Payload base64 to analyze
-        """
+            objectInput (object): file object/standard input to analyze
 
-        f = file_path(path, payload)
+        Returns:
+            content type of file (string)
+        """
+        # From Python detection content type from stdin doesn't work TO FIX
+        if objectInput:
+            message = "Detection content type with file object is not stable."
+            log.exception(message)
+            raise TikaAppError(message)
+
+        f = file_path(path, payload, objectInput)
         switches = ["-d", f]
         result = self._command_template(switches).lower()
         return result, path, f
 
     @clean
-    def extract_only_content(self, path=None, payload=None):
-        """Return only the text content of passed file
+    def extract_only_content(self, path=None, payload=None, objectInput=None):
+        """
+        Return only the text content of passed file.
+        These parameters are in OR. Only one of them can be analyzed.
 
         Args:
             path (string): Path of file to analyze
             payload (string): Payload base64 to analyze
-        """
+            objectInput (object): file object/standard input to analyze
 
-        f = file_path(path, payload)
-        switches = ["-t", f]
-        result = self._command_template(switches)
-        return result, path, f
+        Returns:
+            text of file passed (string)
+        """
+        if objectInput:
+            switches = ["-t"]
+            result = self._command_template(switches, objectInput)
+            return result, True, None
+        else:
+            f = file_path(path, payload)
+            switches = ["-t", f]
+            result = self._command_template(switches)
+            return result, path, f
 
     @clean
-    def detect_language(self, path=None, payload=None):
-        """Return the language of passed file or payload.
+    def detect_language(self, path=None, payload=None, objectInput=None):
+        """
+        This function returns the language of passed file or payload.
 
         Args:
             path (string): Path of file to analyze
             payload (string): Payload base64 to analyze
-        """
+            objectInput (object): file object/standard input to analyze
 
-        f = file_path(path, payload)
-        switches = ["-l", f]
-        result = self._command_template(switches)
-        return result, path, f
+        Returns:
+            language of file (string)
+        """
+        if objectInput:
+            switches = ["-l"]
+            result = self._command_template(switches, objectInput)
+            return result, True, None
+        else:
+            f = file_path(path, payload)
+            switches = ["-l", f]
+            result = self._command_template(switches)
+            return result, path, f
 
     @clean
-    def extract_all_content(self, path=None, payload=None,
-                            pretty_print=False, convert_to_obj=False):
-        """Return a JSON of all contents and metadata of passed file
+    def extract_all_content(
+        self,
+        path=None,
+        payload=None,
+        objectInput=None,
+        pretty_print=False,
+        convert_to_obj=False,
+    ):
+        """
+        This function returns a JSON of all contents and
+        metadata of passed file
 
         Args:
             path (string): Path of file to analyze
             payload (string): Payload base64 to analyze
+            objectInput (object): file object/standard input to analyze
             pretty_print (boolean): If True adds newlines and whitespace,
                                     for better readability
             convert_to_obj (boolean): If True convert JSON in object
         """
-        f = file_path(path, payload)
-
-        if pretty_print:
-            switches = ["-J", "-t", "-r", f]
-        else:
-            switches = ["-J", "-t", f]
-
+        f = file_path(path, payload, objectInput)
+        switches = ["-J", "-t", "-r", f]
+        if not pretty_print:
+            switches.remove("-r")
         result = self._command_template(switches)
 
         if result and convert_to_obj:

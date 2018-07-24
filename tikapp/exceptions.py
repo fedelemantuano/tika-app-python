@@ -17,12 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-__all__ = ["TikaAppJarError", "FilePathError"]
+__all__ = ["TikaAppError", "TikaAppJarError", "TikaAppFilePathError"]
 
 
-class TikaAppJarError(ValueError):
+class TikaAppError(Exception):
     pass
 
 
-class FilePathError(ValueError):
+class TikaAppJarError(TikaAppError):
+    pass
+
+
+class TikaAppFilePathError(TikaAppError):
     pass

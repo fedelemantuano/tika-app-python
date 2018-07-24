@@ -20,21 +20,18 @@ limitations under the License.
 from __future__ import unicode_literals
 import magic
 import os
-import sys
 import timeit
 
-profiling_path = os.path.realpath(os.path.dirname(__file__))
-root = os.path.join(profiling_path, '..')
-sys.path.append(root)
-from tikapp import TikaApp
+from context import TikaApp
 
+profiling_path = os.path.realpath(os.path.dirname(__file__))
 test_zip = os.path.join(profiling_path, "files", "lorem_ipsum.txt.zip")
 test_txt = os.path.join(profiling_path, "files", "lorem_ipsum.txt")
 
 try:
     TIKA_APP_JAR = os.environ["TIKA_APP_JAR"]
 except KeyError:
-    TIKA_APP_JAR = "/opt/tika/tika-app-1.15.jar"
+    TIKA_APP_JAR = "/opt/tika/tika-app-1.18.jar"
 
 
 def tika_content_type():
