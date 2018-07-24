@@ -37,6 +37,16 @@ script:
     - python -m tikapp -v
     - python -m tikapp -h
     - python -m tikapp -a -f tests/files/test.zip
+    - python -m tikapp -a -k < tests/files/test.zip
+
+deploy:
+    provider: pypi
+    user: fmantuano
+    password:
+        secure: "p7l2yeLecvW/j1zs1XvxUbqT8f1ATIuao8TmQ4vJMCKJkhsRComHHkoHs5gYSdhj5QsuTSgcrsxV0PXfdEtyCAndYaZGrySNxlNBIShX0WArDfJCTcvnMWgv+4KoPbGwH27oxmo+icqCiCML4y07aRS8IKK1L/YxodbDTnCGK2dWiYm7VZS1oMFBqZiMxvRde3nE82nqlP6U3lvTE8HFNLlUIUa4hPAOXOuL/tX3L3alpStiBqwQMcHLOgdJuU47MXugfNNa3/u/mYeq4FGY85qcYOi/nXLzD01yAl6saeQ8FXtKDIIgnDVotstyMP31t1MU2yC7fxAj3XgHMbyRC9mCRJbgveHIEbnXnka5xl2mhEKa5e+mea9d3w8XWbi9ftx661w8x1V25v6+RH40WDCszbZ4K3cneWNIC5lRLlMLZ7JUB+L/G72dsBOO4BvCfQeo04WyO7GD0klnWxTNHo28ryOQ0e1Z/v1ocnkF/3ZwbgFjp9/I+rPjwNlHb/tzgr9hyD8BshA1nUE4ZOi+EnZNcuBotysia9tJ9EncjWXv0inUj9VenNqYROrF+xaDnKQRjAQr51CTz4uLA5FqauwNNmtgWoKSZVBwjCdSBnWGLYx059bAzkdhgP4sfxvfzhNxMVDhAucBGdXPeecxrzzfHBVpHkuDJXWuBPT7vwQ="
+    on:
+        tags: true
+        branch: master
 
 after_success:
     coveralls
@@ -44,4 +54,4 @@ after_success:
 notifications:
     email: false
     slack:
-        secure: gLkkwrBjb0jCuiqMCRM5hXPzYH+LNA5UpMcvjULKtvywVnFVren0UYVyp6h81eQhsvIZecghESTitwRwL7Ttl9/TEmiJ1fuD/pjUbRtUDQourm3zpPAlxppVaj61Hfnln6MyPW+1QIlfXpOJRl+k7RrLKTm0FxXP6TS9t9t+p97ZIVz/iOVGwYWNgeSIdxy6sdzISkMx3i3bn7tr/ILruc18wqbaBs7GzQpgjaFl0S+7PDv4vBmj/9dTYxku6G+nSuzz+Do+BXAMCdcSEn4O4HT+tYyxmkCgRqn7zM8KtAXQwNkuSdjTOZo3Pn917jZibrEj8SaqbfXW1Q2BSN30zTk6p0Y22DF26qbYcy1XX6VDL52oy9GCGth1vNGNkLh/rFQHhZfCXvaSz1jws9vrtbEtHPXaYqfA+p/Xi01N1ewLMaL8yWA9NnCNF9r178bjiKtb7TAWu7B2o2I1j3FqfvtXsQsCQvNGTUc0LFP6i3geS056J8jrtz21IXvUmAJLHY5Qx9j88/lwA2HnhJquY7pFUztjXTgl2JBsBeGgzyoERnhq75iWQATteqbBkW1t5jkivw8g5QNbwln10PQij0SvvV9Cr02W7yX2nXt77/YeHR7ddwxxTNK8xUcjJJGUdB3AAGq1R92G/rEs4WfTniS8wG0CksOqyZ2BF1Q0gdk=
+        secure: "gLkkwrBjb0jCuiqMCRM5hXPzYH+LNA5UpMcvjULKtvywVnFVren0UYVyp6h81eQhsvIZecghESTitwRwL7Ttl9/TEmiJ1fuD/pjUbRtUDQourm3zpPAlxppVaj61Hfnln6MyPW+1QIlfXpOJRl+k7RrLKTm0FxXP6TS9t9t+p97ZIVz/iOVGwYWNgeSIdxy6sdzISkMx3i3bn7tr/ILruc18wqbaBs7GzQpgjaFl0S+7PDv4vBmj/9dTYxku6G+nSuzz+Do+BXAMCdcSEn4O4HT+tYyxmkCgRqn7zM8KtAXQwNkuSdjTOZo3Pn917jZibrEj8SaqbfXW1Q2BSN30zTk6p0Y22DF26qbYcy1XX6VDL52oy9GCGth1vNGNkLh/rFQHhZfCXvaSz1jws9vrtbEtHPXaYqfA+p/Xi01N1ewLMaL8yWA9NnCNF9r178bjiKtb7TAWu7B2o2I1j3FqfvtXsQsCQvNGTUc0LFP6i3geS056J8jrtz21IXvUmAJLHY5Qx9j88/lwA2HnhJquY7pFUztjXTgl2JBsBeGgzyoERnhq75iWQATteqbBkW1t5jkivw8g5QNbwln10PQij0SvvV9Cr02W7yX2nXt77/YeHR7ddwxxTNK8xUcjJJGUdB3AAGq1R92G/rEs4WfTniS8wG0CksOqyZ2BF1Q0gdk="
