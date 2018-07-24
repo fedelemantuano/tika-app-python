@@ -24,12 +24,12 @@ import os
 import subprocess
 
 import six
-from .exceptions import TikaAppJarError
+from .exceptions import TikaAppJarError, TikaAppError
 from .utils import file_path, clean, sanitize
 
 try:
     import simplejson as json
-except ImportError:
+except ImportError:  # pragma: no cover
     import json
 
 
@@ -128,6 +128,12 @@ class TikaApp(object):
         Returns:
             content type of file (string)
         """
+        # From Python detection content type from stdin doesn't work TO FIX
+        if objectInput:
+            message = "Detection content type with file object is not stable."
+            log.exception(message)
+            raise TikaAppError(message)
+
         f = file_path(path, payload, objectInput)
         switches = ["-d", f]
         result = self._command_template(switches).lower()

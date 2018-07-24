@@ -26,7 +26,12 @@ import unittest
 import mailparser
 import simplejson as json
 
-from context import TikaApp, TikaAppJarError, TikaAppFilePathError
+from context import (
+    TikaApp,
+    TikaAppError,
+    TikaAppFilePathError,
+    TikaAppJarError,
+)
 
 
 unittest_path = os.path.realpath(os.path.dirname(__file__))
@@ -141,15 +146,15 @@ class TestTikaApp(unittest.TestCase):
         self.assertEqual(result, "application/zip")
 
         with open(test_zip) as f:
-            result_stdin = self.tika.detect_content_type(objectInput=f)
-            self.assertEqual(result, result_stdin)
+            with self.assertRaises(TikaAppError):
+                self.tika.detect_content_type(objectInput=f)
 
         result = self.tika.detect_content_type(path=test_txt)
         self.assertEqual(result, "text/plain")
 
         with open(test_txt) as f:
-            result_stdin = self.tika.detect_content_type(objectInput=f)
-            self.assertEqual(result, result_stdin)
+            with self.assertRaises(TikaAppError):
+                self.tika.detect_content_type(objectInput=f)
 
     def test_extract_only_content(self):
         result = self.tika.extract_only_content(path=test_txt)

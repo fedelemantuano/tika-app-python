@@ -18,14 +18,10 @@ limitations under the License.
 """
 
 import argparse
+import logging
 import os
 import runpy
 import sys
-
-try:
-    from collections import ChainMap
-except ImportError:
-    from chainmap import ChainMap
 
 from tikapp import TikaApp
 
@@ -98,20 +94,18 @@ def get_args():
         action='version',
         version='%(prog)s {}'.format(__version__))
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if args.stdin and args.detect:
+        parser.error("Detection content type with file object is not stable.")
+
+    return args
 
 
 def main():
     args = get_args()
 
-    command_line = dict()
-    if args.jar:
-        command_line = {"TIKA_APP_JAR": args.jar}
-
-    defaults = {"TIKA_APP_JAR": "/opt/tika/tika-app-1.18.jar"}
-    options = ChainMap(command_line, os.environ, defaults)
-
-    tika = TikaApp(options['TIKA_APP_JAR'])
+    tika = TikaApp(args.jar or os.environ.get("TIKA_APP_JAR", None))
 
     parameters = {
         "path": args.file,
@@ -137,4 +131,5 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.getLogger().addHandler(logging.NullHandler())
     main()
