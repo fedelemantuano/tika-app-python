@@ -104,7 +104,6 @@ methods, but passing ``objectInput`` argument:
 
 ::
 
-   tika_client.detect_content_type(objectInput="objectInput")
    tika_client.detect_language(objectInput="objectInput")
    tika_client.extract_all_content(objectInput="objectInput")
    tika_client.extract_only_content(objectInput="objectInput")
