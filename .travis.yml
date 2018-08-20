@@ -39,15 +39,6 @@ script:
     - python -m tikapp -a -f tests/files/test.zip
     - python -m tikapp -a -k < tests/files/test.zip
 
-deploy:
-    provider: pypi
-    user: fmantuano
-    password:
-        secure: "p7l2yeLecvW/j1zs1XvxUbqT8f1ATIuao8TmQ4vJMCKJkhsRComHHkoHs5gYSdhj5QsuTSgcrsxV0PXfdEtyCAndYaZGrySNxlNBIShX0WArDfJCTcvnMWgv+4KoPbGwH27oxmo+icqCiCML4y07aRS8IKK1L/YxodbDTnCGK2dWiYm7VZS1oMFBqZiMxvRde3nE82nqlP6U3lvTE8HFNLlUIUa4hPAOXOuL/tX3L3alpStiBqwQMcHLOgdJuU47MXugfNNa3/u/mYeq4FGY85qcYOi/nXLzD01yAl6saeQ8FXtKDIIgnDVotstyMP31t1MU2yC7fxAj3XgHMbyRC9mCRJbgveHIEbnXnka5xl2mhEKa5e+mea9d3w8XWbi9ftx661w8x1V25v6+RH40WDCszbZ4K3cneWNIC5lRLlMLZ7JUB+L/G72dsBOO4BvCfQeo04WyO7GD0klnWxTNHo28ryOQ0e1Z/v1ocnkF/3ZwbgFjp9/I+rPjwNlHb/tzgr9hyD8BshA1nUE4ZOi+EnZNcuBotysia9tJ9EncjWXv0inUj9VenNqYROrF+xaDnKQRjAQr51CTz4uLA5FqauwNNmtgWoKSZVBwjCdSBnWGLYx059bAzkdhgP4sfxvfzhNxMVDhAucBGdXPeecxrzzfHBVpHkuDJXWuBPT7vwQ="
-    on:
-        tags: true
-        branch: master
-
 after_success:
     coveralls
 

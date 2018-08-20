@@ -1,9 +1,10 @@
-*.pyc
 .*.swp
 .env
 .ropeproject/
-MANIFEST
+.vscode/
+*.pyc
 build/
 dist/
+MANIFEST
 tika_app.egg-info/
 venv*/

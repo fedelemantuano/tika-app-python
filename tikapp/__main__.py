@@ -82,6 +82,13 @@ def get_args():
         help="Output only language")
 
     parser.add_argument(
+        "-m",
+        "--metadata",
+        dest="metadata",
+        action="store_true",
+        help="Output only metadata")
+
+    parser.add_argument(
         "-a",
         "--all",
         dest="all",
@@ -125,6 +132,10 @@ def main():
         if args.all:
             parameters["pretty_print"] = True
             print(tika.extract_all_content(**parameters))
+
+        if args.metadata:
+            parameters["pretty_print"] = True
+            print(tika.extract_only_metadata(**parameters))
 
     except IOError:
         pass
