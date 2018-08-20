@@ -89,6 +89,12 @@ For detect **only content**:
 
    tika_client.extract_only_content("your_file")
 
+For detect **only metadata**:
+
+::
+
+   tika_client.extract_only_metadata("your_file")
+
 You can analyze payload in base64 with the same methods, but passing
 ``payload`` argument:
 
@@ -98,6 +104,7 @@ You can analyze payload in base64 with the same methods, but passing
    tika_client.detect_language(payload="base64_payload")
    tika_client.extract_all_content(payload="base64_payload")
    tika_client.extract_only_content(payload="base64_payload")
+   tika_client.extract_only_metadata(payload="base64_payload")
 
 or you can analyze file object (like standard input) with the same
 methods, but passing ``objectInput`` argument:
@@ -107,14 +114,14 @@ methods, but passing ``objectInput`` argument:
    tika_client.detect_language(objectInput="objectInput")
    tika_client.extract_all_content(objectInput="objectInput")
    tika_client.extract_only_content(objectInput="objectInput")
+   tika_client.extract_only_metadata(objectInput="objectInput")
 
 Usage from command-line
 -----------------------
 
 If you installed tika-app-python with ``pip`` or ``setup.py`` you can
 use it with command-line. To use tika-app-python you should submit the
-Apache Tika app JAR. You can: - leave the default value:
-``/opt/tika/tika-app-1.15.jar`` - set the enviroment value
+Apache Tika app JAR. You can: - set the enviroment value
 ``TIKA_APP_JAR`` - use ``--jar`` switch
 
 The last one overwrite all the others.
@@ -124,7 +131,7 @@ These are all swithes:
 ::
 
    usage: tikapp [-h] (-f FILE | -p PAYLOAD | -k) [-j JAR] [-d] [-t] [-l]
-                      [-a] [-v]
+                      [-m] [-a] [-v]
 
    Wrapper for Apache Tika App.
 
@@ -138,6 +145,7 @@ These are all swithes:
      -d, --detect          Detect document type (default: False)
      -t, --text            Output plain text content (default: False)
      -l, --language        Output only language (default: False)
+     -m, --metadata        Output only metadata (default: False)
      -a, --all             Output metadata and content from all embedded files
                            (default: False)
      -v, --version         show program's version number and exit
