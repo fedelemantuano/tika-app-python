@@ -176,6 +176,17 @@ class TestTikaApp(unittest.TestCase):
                 objectInput=f, convert_to_obj=True)
         self.assertIn("access_permission:assemble_document", result[0])
 
+    def test_extract_only_metadata(self):
+        result = self.tika.extract_only_metadata(test_zip)
+        self.assertIsInstance(result, six.text_type)
+        result_obj = json.loads(result, encoding="utf-8")
+        self.assertIsInstance(result_obj, dict)
+        result = self.tika.extract_only_metadata(test_zip, convert_to_obj=True)
+        self.assertIsInstance(result_obj, dict)
+        self.assertEqual(
+            result["Content-Length"], result_obj["Content-Length"])
+        self.assertDictEqual(result, result_obj)
+
 
 if __name__ == '__main__':
     logging.getLogger().addHandler(logging.NullHandler())

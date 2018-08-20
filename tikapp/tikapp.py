@@ -217,3 +217,34 @@ class TikaApp(object):
             result = json.loads(result, encoding="utf-8")
 
         return result, path, f
+
+    @clean
+    def extract_only_metadata(
+        self,
+        path=None,
+        payload=None,
+        objectInput=None,
+        pretty_print=False,
+        convert_to_obj=False,
+    ):
+        """
+        This function returns a JSON of metadata of passed file
+
+        Args:
+            path (string): Path of file to analyze
+            payload (string): Payload base64 to analyze
+            objectInput (object): file object/standard input to analyze
+            pretty_print (boolean): If True adds newlines and whitespace,
+                                    for better readability
+            convert_to_obj (boolean): If True convert JSON in object
+        """
+        f = file_path(path, payload, objectInput)
+        switches = ["-j", "-r", f]
+        if not pretty_print:
+            switches.remove("-r")
+        result = self._command_template(switches)
+
+        if result and convert_to_obj:
+            result = json.loads(result, encoding="utf-8")
+
+        return result, path, f
